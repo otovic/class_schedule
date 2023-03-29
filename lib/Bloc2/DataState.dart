@@ -1,8 +1,7 @@
-import './DataModel.dart';
-import '../constants.dart';
+part of 'DataBloc.dart';
 
 class DataState {
-  final Subject? data;
+  final Subject data;
   final ReadStatus? status;
 
   DataState._({ this.data = Subject.empty, this.status = ReadStatus.notstarted });
