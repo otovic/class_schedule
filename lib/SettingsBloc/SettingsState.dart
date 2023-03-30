@@ -6,9 +6,7 @@ class SettingsState {
   final loadStatus status;
   final Settings settings;
 
-  SettingsState._(
-      {this.settings = Settings.defaultValues,
-      this.status = loadStatus.loading});
+  SettingsState._({this.settings = Settings.defaultValues, this.status = loadStatus.loading});
 
   SettingsState.defaultValues() : this._();
 

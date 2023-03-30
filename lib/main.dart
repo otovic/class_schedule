@@ -1,3 +1,4 @@
+import 'package:classschedule_app/Models/SettingsModel.dart';
 import 'package:classschedule_app/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class ScheduleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: BlocProvider(
             create: (context) {
               return SettingsBloc();
@@ -31,25 +33,28 @@ class Test2 extends StatelessWidget {
       appBar: AppBar(
         title: Text("TEST"),
       ),
-      body: BlocListener<SettingsBloc, SettingsState>(listener: (context, state) {
+      body: BlocListener<SettingsBloc, SettingsState>(listener:
+          (context, state) {
         if (state.status == loadStatus.error) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(const SnackBar(
+            ..showSnackBar(
+              const SnackBar(
                 content: Text(
-              'Authentication Failure',
-              textDirection: TextDirection.ltr,
-            )));
+                  'Authentication Failure',
+                  textDirection: TextDirection.ltr,
+                ),
+              ),
+            );
         }
-      }, child: BlocBuilder<SettingsBloc, SettingsState>(builder: (context, state) {
+      }, child:
+          BlocBuilder<SettingsBloc, SettingsState>(builder: (context, state) {
         return Column(
           children: [
             Text(state.settings.classLenght.toString()),
             ElevatedButton(
                 onPressed: () {
-                  // context
-                  //     .read<DataBloc>()
-                  //     .add(StatusChangedd(ReadStatus.notstarted));
+                  context.read<SettingsBloc>().add(InitSettings());
                 },
                 child: const Text('Promeni')),
             Text(state.status.toString())
