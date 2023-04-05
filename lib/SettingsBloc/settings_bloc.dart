@@ -1,18 +1,30 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
 import '../Models/SettingsModel.dart';
-import '../Services/DatabaseService.dart';
+import '../Services/database_service.dart';
 import '../constants/constants.dart';
 
-part './SettingsState.dart';
-part './SettingsEvents.dart';
+part './settings_state.dart';
+part './settings_event.dart';
 
 class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
   SettingsBloc()
       : super(SettingsState.setValues(
             Settings.defaultValues, loadStatus.loading)) {
     on<InitSettings>((event, emit) => _initSettings(event, emit));
+    on<SettingsChanged>((event, emit) => _changeSettings(event, emit));
+    on<revertSetting>((event, emit) => _revert(event, emit));
     this.add(InitSettings());
+  }
+
+  Future<void> _changeSettings(
+      SettingsEvents event, Emitter<SettingsState> emit) async {
+    emit(SettingsState.setValues(Settings.defaultValues, loadStatus.loading));
+  }
+
+  Future<void> _revert(
+      SettingsEvents event, Emitter<SettingsState> emit) async {
+    emit(SettingsState.setValues(Settings.defaultValues, loadStatus.firstLoad));
   }
 
   Future<void> _initSettings(
@@ -38,11 +50,12 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
       }
 
       emit(SettingsState.setValues(
-          new Settings(result[0]['settingValue'], result[1]['settingValue']),
+          new Settings(result[0]['settingValue'], result[1]['settingValue'],
+              result[2]['settingValue']),
           loadStatus.loaded));
     } catch (error) {
-      print(error.toString() + " ERROR");
-      emit(SettingsState.setValues(new Settings(1, 45), loadStatus.error));
+      emit(
+          SettingsState.setValues(new Settings("en", 45, 1), loadStatus.error));
     }
   }
 

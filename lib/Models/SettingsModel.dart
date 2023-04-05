@@ -1,8 +1,9 @@
 class Settings {
-  final int langID;
+  final String langID;
   final int classLenght;
+  final int numOfWeeks;
 
-  const Settings(this.langID, this.classLenght);
+  const Settings(this.langID, this.classLenght, this.numOfWeeks);
 
-  static const defaultValues = Settings(1, 45);
+  static const defaultValues = Settings("en", 45, 1);
 }
