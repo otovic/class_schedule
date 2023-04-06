@@ -1,11 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
-import '../Models/SettingsModel.dart';
-import '../Services/database_service.dart';
-import '../constants/constants.dart';
 
-part './settings_state.dart';
-part './settings_event.dart';
+import '../../../Services/database_service.dart';
+import '../../../constants/constants.dart';
+import '../../Models/SettingsModel.dart';
+
+part 'settings_event.dart';
+part 'settings_state.dart';
 
 class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
   SettingsBloc()

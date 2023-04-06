@@ -31,7 +31,6 @@ class DateService {
   }
 
   static String? getWeekDayFromNum(int num, String lang) {
-    print("$num $lang");
     switch (num) {
       case 1:
         return monday[lang];
@@ -81,5 +80,10 @@ class DateService {
       default:
         return january[lang];
     }
+  }
+
+  static bool equalDates(DateTime dt1, DateTime dt2) {
+    if (dt1.month == dt2.month && dt1.weekday == dt2.weekday) return true;
+    return false;
   }
 }

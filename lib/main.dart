@@ -3,7 +3,8 @@ import 'package:classschedule_app/Screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import './SettingsBloc/settings_bloc.dart';
+import './Blocs/ScheduleBloc/schedule_bloc.dart';
+import './Blocs/SettingsBloc/settings_bloc.dart';
 
 void main() {
   runApp(
@@ -16,26 +17,29 @@ void main() {
 
 class ScheduleApp extends StatelessWidget {
   SettingsBloc settingsBloc = SettingsBloc();
+  ScheduleBloc scheduleBloc = ScheduleBloc();
   ScheduleApp();
 
   @override
   Widget build(BuildContext context) {
-    return AppView(this.settingsBloc);
+    return AppView(this.settingsBloc, this.scheduleBloc);
   }
 }
 
 class AppView extends StatefulWidget {
-  SettingsBloc? settingBloc;
-  AppView(this.settingBloc, {Key? key}) : super(key: key);
+  SettingsBloc settingBloc;
+  ScheduleBloc scheduleBloc;
+  AppView(this.settingBloc, this.scheduleBloc, {Key? key}) : super(key: key);
 
   @override
-  State<AppView> createState() => _AppViewState(settingBloc);
+  State<AppView> createState() => _AppViewState(settingBloc, this.scheduleBloc);
 }
 
 class _AppViewState extends State<AppView> {
-  SettingsBloc? settingsBloc;
+  SettingsBloc settingsBloc;
+  ScheduleBloc scheduleBloc;
 
-  _AppViewState(this.settingsBloc);
+  _AppViewState(this.settingsBloc, this.scheduleBloc);
 
   @override
   Widget build(BuildContext context) {
@@ -53,20 +57,29 @@ class _AppViewState extends State<AppView> {
           );
         }
       },
-      child: Builder(builder: (context) {
-        return BlocBuilder(
+      child: Builder(
+        builder: (context) {
+          return BlocBuilder(
             bloc: this.settingsBloc,
             builder: (BuildContext context, SettingsState state) {
               if (state.status == loadStatus.firstLoad) {
-                return MainScreen(this.settingsBloc);
+                return MultiBlocProvider(
+                  providers: [
+                    BlocProvider<SettingsBloc>.value(value: this.settingsBloc),
+                    BlocProvider<ScheduleBloc>.value(value: this.scheduleBloc)
+                  ],
+                  child: MainScreen(),
+                );
               }
 
               return Scaffold(
                   body: Center(
                 child: CircularProgressIndicator(),
               ));
-            });
-      }),
+            },
+          );
+        },
+      ),
     );
   }
 }

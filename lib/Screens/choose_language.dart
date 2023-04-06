@@ -1,7 +1,8 @@
 import 'package:classschedule_app/Models/SettingsModel.dart';
-import 'package:classschedule_app/SettingsBloc/settings_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../Blocs/SettingsBloc/settings_bloc.dart';
 
 class ChooseLanguage extends StatelessWidget {
   const ChooseLanguage({Key? key}) : super(key: key);
