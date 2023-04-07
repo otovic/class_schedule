@@ -7,7 +7,7 @@ class WeekDayBox extends StatelessWidget {
   final DateTime date;
   final String lang;
   final DateTime currentDate;
-  const WeekDayBox(this.date, this.lang, this.currentDate, {Key? key})
+  WeekDayBox(this.date, this.lang, this.currentDate, {Key? key})
       : super(key: key);
 
   @override
@@ -15,6 +15,17 @@ class WeekDayBox extends StatelessWidget {
     final scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
     return BlocBuilder(
         bloc: scheduleBloc,
+        buildWhen: (ScheduleState previous, ScheduleState current) {
+          if (DateService.equalDates(previous.currentDate, this.date) &&
+              DateService.equalDates(current.currentDate, this.date)) {
+            return false;
+          }
+          if (DateService.equalDates(previous.currentDate, this.date) ||
+              DateService.equalDates(current.currentDate, this.date)) {
+            return true;
+          }
+          return false;
+        },
         builder: (BuildContext context, ScheduleState state) {
           return GestureDetector(
             onTap: () =>
@@ -28,12 +39,14 @@ class WeekDayBox extends StatelessWidget {
                   height: MediaQuery.of(context).size.shortestSide * 0.15,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: DateService.equalDates(this.date, this.currentDate)
-                          ? Colors.black
-                          : Colors.grey,
-                      width: DateService.equalDates(this.date, this.currentDate)
-                          ? 2
-                          : 1,
+                      color:
+                          DateService.equalDates(state.currentDate, this.date)
+                              ? Colors.black
+                              : Colors.grey,
+                      width:
+                          DateService.equalDates(state.currentDate, this.date)
+                              ? 2
+                              : 1,
                     ),
                     borderRadius: BorderRadius.circular(5),
                   ),

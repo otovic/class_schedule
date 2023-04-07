@@ -31,10 +31,12 @@ class DaySelectorBanner extends StatelessWidget {
     final settingsBloc = BlocProvider.of<SettingsBloc>(context);
     final scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
 
-    return BlocBuilder(
+    return BlocBuilder<ScheduleBloc, ScheduleState>(
         bloc: scheduleBloc,
+        buildWhen: (previous, current) => false,
         builder: (BuildContext context, ScheduleState schState) {
           return BlocBuilder(
+            buildWhen: (current, previous) => false,
             bloc: settingsBloc,
             builder: (BuildContext context, SettingsState state) {
               return Container(

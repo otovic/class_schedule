@@ -16,28 +16,31 @@ class MainScreen extends StatelessWidget {
     final scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
 
     return BlocBuilder(
-        bloc: scheduleBloc,
-        builder: (BuildContext context, ScheduleState schState) {
-          return BlocBuilder(
-            bloc: settingsBloc,
-            builder: (BuildContext context, SettingsState state) {
-              return Scaffold(
-                appBar: AppBar(
-                  elevation: 0,
-                  actions: state.settings.numOfWeeks != 1
-                      ? [WeekSelector(state.settings.numOfWeeks)]
-                      : [],
-                  title: Text(
-                    DateService.getWeekDayFromLang(state.settings.langID)
-                        .toString(),
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  backgroundColor: Colors.white,
+      bloc: scheduleBloc,
+      buildWhen: (previous, current) => false,
+      builder: (BuildContext context, ScheduleState schState) {
+        return BlocBuilder(
+          bloc: settingsBloc,
+          buildWhen: (previous, current) => false,
+          builder: (BuildContext context, SettingsState state) {
+            return Scaffold(
+              appBar: AppBar(
+                elevation: 0,
+                actions: state.settings.numOfWeeks != 1
+                    ? [WeekSelector(state.settings.numOfWeeks)]
+                    : [],
+                title: Text(
+                  DateService.getWeekDayFromLang(state.settings.langID)
+                      .toString(),
+                  style: TextStyle(color: Colors.black),
                 ),
-                body: DaySelectorBanner(),
-              );
-            },
-          );
-        });
+                backgroundColor: Colors.white,
+              ),
+              body: DaySelectorBanner(),
+            );
+          },
+        );
+      },
+    );
   }
 }
