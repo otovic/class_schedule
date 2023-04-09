@@ -1,6 +1,6 @@
 part of 'settings_bloc.dart';
 
-enum loadStatus { firstLoad, loading, loaded, error }
+enum loadStatus { firstLoad, firstLoad2, loading, loaded, error }
 
 class SettingsState {
   final loadStatus status;

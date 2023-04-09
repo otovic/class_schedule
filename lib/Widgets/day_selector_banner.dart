@@ -8,18 +8,18 @@ import '../Blocs/SettingsBloc/settings_bloc.dart';
 class DaySelectorBanner extends StatelessWidget {
   DaySelectorBanner({Key? key}) : super(key: key);
 
-  List<WeekDayBox> _generateBoxes(String lang, DateTime date2) {
+  List<WeekDayBox> _generateBoxes(String lang) {
     bool first = true;
     List<WeekDayBox>? boxes = [];
     DateTime date = DateTime.now();
 
     for (int i = 0; i < 7; i++) {
       if (first) {
-        boxes.add(WeekDayBox(date, lang, date2));
+        boxes.add(WeekDayBox(date));
         first = false;
       } else {
         date = date.add(Duration(days: 1));
-        boxes.add(WeekDayBox(date, lang, date2));
+        boxes.add(WeekDayBox(date));
       }
     }
 
@@ -56,8 +56,7 @@ class DaySelectorBanner extends StatelessWidget {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: _generateBoxes(
-                          state.settings.langID, schState.currentDate),
+                      children: _generateBoxes(state.settings.langID),
                     )
                   ],
                 ),

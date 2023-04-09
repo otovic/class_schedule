@@ -1,4 +1,5 @@
 import 'package:classschedule_app/Screens/choose_language.dart';
+import 'package:classschedule_app/Screens/loader.dart';
 import 'package:classschedule_app/Screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,21 +9,61 @@ import './Blocs/SettingsBloc/settings_bloc.dart';
 
 void main() {
   runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ScheduleApp(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<SettingsBloc>(
+          create: (BuildContext context) => SettingsBloc(),
+        ),
+        BlocProvider<ScheduleBloc>(
+          create: (BuildContext context) => ScheduleBloc(),
+        ),
+      ],
+      child: MaterialApp(
+        routes: {
+          '/choose-language': (context) => ChooseLanguage(),
+          '/main-screen': (context) => MainScreen(),
+        },
+        debugShowCheckedModeBanner: false,
+        home: LoaderScreen(),
+      ),
     ),
   );
 }
 
-class ScheduleApp extends StatelessWidget {
-  SettingsBloc settingsBloc = SettingsBloc();
-  ScheduleBloc scheduleBloc = ScheduleBloc();
+class ScheduleApp extends StatefulWidget {
   ScheduleApp();
 
   @override
+  State<ScheduleApp> createState() => _ScheduleAppState();
+}
+
+class _ScheduleAppState extends State<ScheduleApp> {
+  @override
   Widget build(BuildContext context) {
-    return AppView(this.settingsBloc, this.scheduleBloc);
+    SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
+    ScheduleBloc scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
+
+    return BlocBuilder(
+      bloc: settingsBloc,
+      builder: (BuildContext context, SettingsState settingsState) {
+        if (settingsState.status == loadStatus.firstLoad) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushNamed(context, '/choose-language');
+          });
+        }
+
+        if (settingsState.status == loadStatus.firstLoad2) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushNamed(context, '/main-screen');
+          });
+        }
+
+        return Scaffold(
+            body: Center(
+          child: CircularProgressIndicator(),
+        ));
+      },
+    );
   }
 }
 
@@ -43,43 +84,46 @@ class _AppViewState extends State<AppView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener(
-      bloc: this.settingsBloc,
-      listener: (BuildContext context, SettingsState state) {
-        if (state.status == loadStatus.loading) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => BlocProvider.value(
-                value: BlocProvider.of<SettingsBloc>(context),
-                child: ChooseLanguage(),
-              ),
-            ),
-          );
-        }
-      },
-      child: Builder(
-        builder: (context) {
-          return BlocBuilder(
-            bloc: this.settingsBloc,
-            builder: (BuildContext context, SettingsState state) {
-              if (state.status == loadStatus.firstLoad) {
-                return MultiBlocProvider(
-                  providers: [
-                    BlocProvider<SettingsBloc>.value(value: this.settingsBloc),
-                    BlocProvider<ScheduleBloc>.value(value: this.scheduleBloc)
-                  ],
-                  child: MainScreen(),
-                );
-              }
+    return Builder(
+      builder: (context) {
+        return BlocBuilder(
+          bloc: this.settingsBloc,
+          builder: (BuildContext context, SettingsState settingsState) {
+            return BlocBuilder(
+              bloc: this.scheduleBloc,
+              builder: (BuildContext context, ScheduleState state) {
+                if (settingsState.status == loadStatus.firstLoad) {
+                  return MultiBlocProvider(
+                    providers: [
+                      BlocProvider<SettingsBloc>.value(
+                          value: this.settingsBloc),
+                      BlocProvider<ScheduleBloc>.value(value: this.scheduleBloc)
+                    ],
+                    child: ChooseLanguage(),
+                  );
+                }
 
-              return Scaffold(
-                  body: Center(
-                child: CircularProgressIndicator(),
-              ));
-            },
-          );
-        },
-      ),
+                if (settingsState.status == loadStatus.firstLoad2) {
+                  print("KOKOKOKO");
+                  return MultiBlocProvider(
+                    providers: [
+                      BlocProvider<SettingsBloc>.value(
+                          value: this.settingsBloc),
+                      BlocProvider<ScheduleBloc>.value(value: this.scheduleBloc)
+                    ],
+                    child: MainScreen(),
+                  );
+                }
+
+                return Scaffold(
+                    body: Center(
+                  child: CircularProgressIndicator(),
+                ));
+              },
+            );
+          },
+        );
+      },
     );
   }
 }
