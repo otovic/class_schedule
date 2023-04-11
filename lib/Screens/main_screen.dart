@@ -1,5 +1,6 @@
 import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
 import 'package:classschedule_app/Screens/choose_language.dart';
+import 'package:classschedule_app/Screens/settings.dart';
 import 'package:classschedule_app/Widgets/day_selector_banner.dart';
 import 'package:classschedule_app/Widgets/week_selector.dart';
 import 'package:flutter/material.dart';
@@ -50,12 +51,12 @@ class MainScreen extends StatelessWidget {
                   DateService.getWeekDayFromNum(
                           schState.currentDate.weekday, state.settings.langID)
                       .toString(),
-                  style: TextStyle(color: Colors.black),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).primaryColor,
               ),
               bottomNavigationBar: BottomAppBar(
-                color: Colors.white,
+                color: Theme.of(context).primaryColor,
                 height: MediaQuery.of(context).size.shortestSide * 0.15,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -75,12 +76,14 @@ class MainScreen extends StatelessWidget {
                     CircularIcon(
                       icon: Icons.settings_outlined,
                       onTapFunc: () {
-                        print("TEST");
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => const SettingsScreen()));
                       },
                     ),
                   ],
                 ),
               ),
+              backgroundColor: Theme.of(context).canvasColor,
               body: Column(
                 children: [
                   DaySelectorBanner(),
@@ -120,7 +123,10 @@ class CircularIcon extends StatelessWidget {
         height: MediaQuery.of(context).size.shortestSide * 0.10,
         width: MediaQuery.of(context).size.shortestSide * 0.10,
         child: Center(
-          child: Icon(icon),
+          child: Icon(
+            icon,
+            color: Theme.of(context).backgroundColor,
+          ),
         ),
       ),
     );

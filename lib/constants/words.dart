@@ -25,3 +25,4 @@ Map<String, String> chooseLang = {
   "en": "Choose language",
   "sr": "Изаберите језик"
 };
+Map<String, String> settings = {"en": "Settings", "sr": "Подешавања"};

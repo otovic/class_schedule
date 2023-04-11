@@ -1,10 +1,11 @@
+import 'package:classschedule_app/constants/words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../Blocs/SettingsBloc/settings_bloc.dart';
 
-class ChooseInitSettings extends StatelessWidget {
-  const ChooseInitSettings({super.key});
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +14,10 @@ class ChooseInitSettings extends StatelessWidget {
       bloc: settingsBloc,
       builder: (BuildContext context, SettingsState state) {
         return Scaffold(
-          appBar: state.status == loadStatus.firstLoad2
-              ? null
-              : AppBar(
-                  title: Text("NESTO"),
-                ),
+          appBar: AppBar(
+            title: Text(settings[state.settings.langID]!),
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
           body: SizedBox(
             width: double.infinity,
             height: double.infinity,

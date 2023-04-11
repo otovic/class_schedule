@@ -47,7 +47,7 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
           await _readSettings(dbStatus[1], readSettingsQuery);
       print("${result} ovo je duzina");
 
-      if (result.length != 4) {
+      if (result.length != 5) {
         emit(SettingsState.setValues(
             Settings.defaultValues, loadStatus.firstLoad));
         return;
@@ -59,12 +59,13 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
           new Settings(
               result[0]['settingValue'].toString(),
               int.parse(result[1]['settingValue']),
-              int.parse(result[2]['settingValue'])),
+              int.parse(result[2]['settingValue']),
+              result[3]['settingValue']),
           loadStatus.loaded));
     } catch (error) {
       print(error);
-      emit(
-          SettingsState.setValues(new Settings("en", 45, 1), loadStatus.error));
+      emit(SettingsState.setValues(
+          new Settings("en", 45, 1, 'light'), loadStatus.error));
     }
   }
 
@@ -95,8 +96,13 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
 
     await DatabaseService.runInsertQuery(dbStatus[1], query);
 
+    query =
+        "INSERT INTO settings (id, settingID, settingValue) VALUES (5, 4, 'light')";
+
+    await DatabaseService.runInsertQuery(dbStatus[1], query);
+
     emit(SettingsState.setValues(
-        new Settings(event.lang, 45, 1), loadStatus.loaded));
+        new Settings(event.lang, 45, 1, 'light'), loadStatus.loaded));
   }
 
   Future<List<Map<dynamic, dynamic>>> _readSettings(

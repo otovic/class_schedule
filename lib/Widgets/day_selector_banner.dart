@@ -43,13 +43,13 @@ class DaySelectorBanner extends StatelessWidget {
                 width: double.infinity,
                 height: 70,
                 decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
                   border: Border(
                     bottom: BorderSide(
                       width: 1,
-                      color: Color.fromARGB(255, 236, 236, 236),
+                      color: Theme.of(context).canvasColor,
                     ),
                   ),
-                  color: Colors.white,
                 ),
                 child: ListView(
                   scrollDirection: Axis.horizontal,

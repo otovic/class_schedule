@@ -8,6 +8,19 @@ class WeekDayBox extends StatelessWidget {
   final DateTime date;
   WeekDayBox(this.date, {Key? key}) : super(key: key);
 
+  Color _getRegularOutline(DateTime d1, DateTime d2, BuildContext context) {
+    if (Theme.of(context).primaryColor == Color.fromRGBO(26, 26, 26, 1)) {
+      if (DateService.equalDates(d1, d2)) {
+        return Colors.blueAccent;
+      }
+      return Colors.grey.shade300;
+    }
+    if (DateService.equalDates(d1, d2)) {
+      return Colors.black;
+    }
+    return Colors.grey.shade600;
+  }
+
   @override
   Widget build(BuildContext context) {
     final scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
@@ -46,10 +59,8 @@ class WeekDayBox extends StatelessWidget {
                         height: MediaQuery.of(context).size.shortestSide * 0.15,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: DateService.equalDates(
-                                    state.currentDate, this.date)
-                                ? Colors.black
-                                : Colors.grey,
+                            color: _getRegularOutline(
+                                state.currentDate, date, context),
                             width: DateService.equalDates(
                                     state.currentDate, this.date)
                                 ? 2
@@ -66,12 +77,20 @@ class WeekDayBox extends StatelessWidget {
                                   .toString()
                                   .substring(0, 3),
                               style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.color,
                                 fontSize: 8,
                               ),
                             ),
                             Text(
                               date.day.toString(),
                               style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.color,
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -82,7 +101,12 @@ class WeekDayBox extends StatelessWidget {
                                   .toString()
                                   .substring(0, 3),
                               style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.color,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold),
                             )
                           ],
                         ),
