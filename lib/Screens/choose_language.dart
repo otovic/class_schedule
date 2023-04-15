@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../Blocs/SettingsBloc/settings_bloc.dart';
+import '../constants/themes.dart';
 import '../constants/words.dart';
 
 class ChooseLanguage extends StatelessWidget {
@@ -24,8 +25,14 @@ class ChooseLanguage extends StatelessWidget {
                   state.status == loadStatus.firstLoad2
               ? null
               : AppBar(
-                  title: Text(chooseLang[state.settings.langID].toString()),
-                  backgroundColor: Colors.white,
+                  title: Text(
+                    language[state.settings.langID].toString(),
+                    style: TextStyle(color: Theme.of(context).backgroundColor),
+                  ),
+                  backgroundColor: Theme.of(context).primaryColor,
+                  iconTheme: settingsBloc.state.settings.theme == 'light'
+                      ? iconThemeDark
+                      : iconThemeLight,
                 ),
           body: Column(
             children: [
@@ -37,10 +44,12 @@ class ChooseLanguage extends StatelessWidget {
                       Text(
                         state.status == loadStatus.firstLoad ||
                                 state.status == loadStatus.firstLoad2
-                            ? "Choose language"
+                            ? "Choose Language"
                             : chooseLang[state.settings.langID].toString(),
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).backgroundColor),
                       ),
                       SizedBox(
                         height: 20,

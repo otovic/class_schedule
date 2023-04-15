@@ -9,25 +9,35 @@ import './Blocs/SettingsBloc/settings_bloc.dart';
 import './constants/themes.dart';
 
 void main() {
+  final settingsBloc = SettingsBloc();
+  final scheduleBloc = ScheduleBloc();
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider<SettingsBloc>(
-          create: (BuildContext context) => SettingsBloc(),
+          create: (BuildContext context) => settingsBloc,
         ),
         BlocProvider<ScheduleBloc>(
-          create: (BuildContext context) => ScheduleBloc(),
+          create: (BuildContext context) => scheduleBloc,
         ),
       ],
-      child: MaterialApp(
-        routes: {
-          '/choose-language': (context) => ChooseLanguage(),
-          '/main-screen': (context) => MainScreen(),
-        },
-        theme: darkTheme,
-        debugShowCheckedModeBanner: false,
-        home: LoaderScreen(),
-      ),
+      child: BlocBuilder(
+          bloc: settingsBloc,
+          buildWhen: (SettingsState previous, SettingsState current) {
+            if (previous.settings.theme != current.settings.theme) return true;
+            return false;
+          },
+          builder: (BuildContext context, SettingsState state) {
+            return MaterialApp(
+              routes: {
+                '/choose-language': (context) => ChooseLanguage(),
+                '/main-screen': (context) => MainScreen(),
+              },
+              theme: state.settings.theme == 'light' ? lightTheme : darkTheme,
+              debugShowCheckedModeBanner: false,
+              home: LoaderScreen(),
+            );
+          }),
     ),
   );
 }

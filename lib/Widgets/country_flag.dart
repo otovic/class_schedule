@@ -21,10 +21,17 @@ class CountryFlag extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {
               try {
-                settingsBloc.add(insertDefaultLanguage(langIndex));
-                Navigator.of(context).pop();
+                if (state.status == loadStatus.firstLoad) {
+                  settingsBloc.add(insertDefaultLanguage(langIndex));
+                  print("OVDE");
+                  Navigator.of(context).pop();
+                } else {
+                  settingsBloc.add(ChangeLanguage(langIndex));
+                  print("OVDE@2222");
+                  Navigator.of(context).pop();
+                }
               } catch (e) {
-                print(e);
+                print("GRESKAAA");
               }
             },
             style: ElevatedButton.styleFrom(
@@ -53,7 +60,6 @@ class CountryFlag extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(state.settings.langID),
               ],
             ),
           ),

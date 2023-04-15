@@ -13,11 +13,11 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
       : super(SettingsState.setValues(
             Settings.defaultValues, loadStatus.loading)) {
     on<InitSettings>((event, emit) => _initSettings(event, emit));
-    // on<SettingsChanged>((event, emit) => _changeSettings(event, emit));
-    // on<revertSetting>((event, emit) => _revert(event, emit));
     on<insertDefaultLanguage>(
         (event, emit) => _insertDefaultLanguage(event, emit));
-    this.add(InitSettings());
+    on<ChangeTheme>((event, emit) => _changeTheme(event, emit));
+    on<ChangeLanguage>((event, emit) => _changeLanguage(event, emit));
+    add(const InitSettings());
   }
 
   Future<void> _changeSettings(
@@ -45,7 +45,6 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
 
       List<Map<dynamic, dynamic>> result =
           await _readSettings(dbStatus[1], readSettingsQuery);
-      print("${result} ovo je duzina");
 
       if (result.length != 5) {
         emit(SettingsState.setValues(
@@ -53,17 +52,14 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
         return;
       }
 
-      print(result[1]['settingValue']);
-
       emit(SettingsState.setValues(
-          new Settings(
+          Settings(
               result[0]['settingValue'].toString(),
               int.parse(result[1]['settingValue']),
               int.parse(result[2]['settingValue']),
-              result[3]['settingValue']),
+              result[4]['settingValue']),
           loadStatus.loaded));
     } catch (error) {
-      print(error);
       emit(SettingsState.setValues(
           new Settings("en", 45, 1, 'light'), loadStatus.error));
     }
@@ -103,6 +99,47 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
 
     emit(SettingsState.setValues(
         new Settings(event.lang, 45, 1, 'light'), loadStatus.loaded));
+  }
+
+  Future<void> _changeTheme(
+      ChangeTheme event, Emitter<SettingsState> emit) async {
+    String path = await DatabaseService.getStoragePath();
+
+    List<dynamic> dbStatus =
+        await DatabaseService.initDatabase(path, "settings");
+
+    String query =
+        "UPDATE settings SET settingValue = '${state.settings.theme == 'light' ? 'dark' : 'light'}' WHERE id = 5";
+
+    await DatabaseService.runInsertQuery(dbStatus[1], query);
+
+    emit(
+      SettingsState.setValues(
+          Settings(
+              state.settings.langID,
+              state.settings.classLenght,
+              state.settings.numOfWeeks,
+              state.settings.theme == 'light' ? 'dark' : 'light'),
+          state.status),
+    );
+  }
+
+  Future<void> _changeLanguage(
+      ChangeLanguage event, Emitter<SettingsState> emit) async {
+    String path = await DatabaseService.getStoragePath();
+
+    List<dynamic> dbStatus =
+        await DatabaseService.initDatabase(path, "settings");
+
+    String query =
+        "UPDATE settings SET settingValue = '${event.language}' WHERE id = 1";
+
+    await DatabaseService.runInsertQuery(dbStatus[1], query);
+
+    emit(SettingsState.setValues(
+        Settings(event.language, state.settings.classLenght,
+            state.settings.numOfWeeks, state.settings.theme),
+        state.status));
   }
 
   Future<List<Map<dynamic, dynamic>>> _readSettings(

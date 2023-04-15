@@ -8,14 +8,16 @@ class LoaderScreen extends StatelessWidget {
 
   Future<void> _changeToMainScreen(BuildContext context) async {
     Future.delayed(Duration(seconds: 2));
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => MainScreen(),
-        ),
-      );
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => MainScreen(),
+          ),
+        );
+      },
+    );
   }
 
   @override

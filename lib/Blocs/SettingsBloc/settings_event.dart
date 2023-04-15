@@ -26,3 +26,12 @@ class changeToFirstLoad2 extends SettingsEvents {
 class InitSettings extends SettingsEvents {
   const InitSettings();
 }
+
+class ChangeTheme extends SettingsEvents {
+  const ChangeTheme();
+}
+
+class ChangeLanguage extends SettingsEvents {
+  final String language;
+  const ChangeLanguage(this.language);
+}

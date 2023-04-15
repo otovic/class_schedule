@@ -26,3 +26,7 @@ Map<String, String> chooseLang = {
   "sr": "Изаберите језик"
 };
 Map<String, String> settings = {"en": "Settings", "sr": "Подешавања"};
+Map<String, String> light = {"en": "Light", "sr": "Светло"};
+Map<String, String> dark = {"en": "Dark", "sr": "Мрак"};
+Map<String, String> theme = {"en": "Theme", "sr": "Тема"};
+Map<String, String> language = {"en": "Language", "sr": "Језик"};

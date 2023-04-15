@@ -38,6 +38,8 @@ class MainScreen extends StatelessWidget {
           buildWhen: (SettingsState previous, SettingsState current) {
             if (previous.settings.langID != current.settings.langID)
               return true;
+            if (previous.settings.theme != current.settings.theme) return true;
+            print(current.settings.theme);
             return false;
           },
           builder: (BuildContext context, SettingsState state) {
@@ -90,7 +92,7 @@ class MainScreen extends StatelessWidget {
                   Expanded(
                     child: Center(
                       child: Text(
-                        state.status.toString(),
+                        state.settings.theme,
                         // noClass[state.settings.langID].toString(),
                         textAlign: TextAlign.center,
                       ),
