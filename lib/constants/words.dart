@@ -30,3 +30,8 @@ Map<String, String> light = {"en": "Light", "sr": "Светло"};
 Map<String, String> dark = {"en": "Dark", "sr": "Мрак"};
 Map<String, String> theme = {"en": "Theme", "sr": "Тема"};
 Map<String, String> language = {"en": "Language", "sr": "Језик"};
+Map<String, String> numOfWeeks = {"en": "Number of weeks", "sr": "Број недеља"};
+Map<String, String> checkGitHub = {
+  "en": "Check this project out on GitHub",
+  "sr": "Погледајте овај пројекат на ГитХаб-у"
+};

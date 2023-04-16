@@ -17,6 +17,7 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
         (event, emit) => _insertDefaultLanguage(event, emit));
     on<ChangeTheme>((event, emit) => _changeTheme(event, emit));
     on<ChangeLanguage>((event, emit) => _changeLanguage(event, emit));
+    on<ChangeWeekNum>((event, emit) => _changeWeekNum(event, emit));
     add(const InitSettings());
   }
 
@@ -46,22 +47,19 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
       List<Map<dynamic, dynamic>> result =
           await _readSettings(dbStatus[1], readSettingsQuery);
 
-      if (result.length != 5) {
+      if (result.length != 4) {
         emit(SettingsState.setValues(
             Settings.defaultValues, loadStatus.firstLoad));
         return;
       }
 
       emit(SettingsState.setValues(
-          Settings(
-              result[0]['settingValue'].toString(),
-              int.parse(result[1]['settingValue']),
-              int.parse(result[2]['settingValue']),
-              result[4]['settingValue']),
+          Settings(result[0]['settingValue'].toString(),
+              int.parse(result[1]['settingValue']), result[3]['settingValue']),
           loadStatus.loaded));
     } catch (error) {
       emit(SettingsState.setValues(
-          new Settings("en", 45, 1, 'light'), loadStatus.error));
+          const Settings("en", 1, 'light'), loadStatus.error));
     }
   }
 
@@ -78,27 +76,22 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
     await DatabaseService.runInsertQuery(dbStatus[1], query);
 
     query =
-        "INSERT INTO settings (id, settingID, settingValue) VALUES (2, 2, '45')";
+        "INSERT INTO settings (id, settingID, settingValue) VALUES (2, 2, '1')";
 
     await DatabaseService.runInsertQuery(dbStatus[1], query);
 
     query =
-        "INSERT INTO settings (id, settingID, settingValue) VALUES (3, 3, '1')";
+        "INSERT INTO settings (id, settingID, settingValue) VALUES (3, 3, '24')";
 
     await DatabaseService.runInsertQuery(dbStatus[1], query);
 
     query =
-        "INSERT INTO settings (id, settingID, settingValue) VALUES (4, 4, '24')";
-
-    await DatabaseService.runInsertQuery(dbStatus[1], query);
-
-    query =
-        "INSERT INTO settings (id, settingID, settingValue) VALUES (5, 4, 'light')";
+        "INSERT INTO settings (id, settingID, settingValue) VALUES (4, 4, 'light')";
 
     await DatabaseService.runInsertQuery(dbStatus[1], query);
 
     emit(SettingsState.setValues(
-        new Settings(event.lang, 45, 1, 'light'), loadStatus.loaded));
+        Settings(event.lang, 1, 'light'), loadStatus.loaded));
   }
 
   Future<void> _changeTheme(
@@ -109,16 +102,13 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
         await DatabaseService.initDatabase(path, "settings");
 
     String query =
-        "UPDATE settings SET settingValue = '${state.settings.theme == 'light' ? 'dark' : 'light'}' WHERE id = 5";
+        "UPDATE settings SET settingValue = '${state.settings.theme == 'light' ? 'dark' : 'light'}' WHERE id = 4";
 
     await DatabaseService.runInsertQuery(dbStatus[1], query);
 
     emit(
       SettingsState.setValues(
-          Settings(
-              state.settings.langID,
-              state.settings.classLenght,
-              state.settings.numOfWeeks,
+          Settings(state.settings.langID, state.settings.numOfWeeks,
               state.settings.theme == 'light' ? 'dark' : 'light'),
           state.status),
     );
@@ -137,9 +127,43 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
     await DatabaseService.runInsertQuery(dbStatus[1], query);
 
     emit(SettingsState.setValues(
-        Settings(event.language, state.settings.classLenght,
-            state.settings.numOfWeeks, state.settings.theme),
+        Settings(
+            event.language, state.settings.numOfWeeks, state.settings.theme),
         state.status));
+  }
+
+  Future<void> _changeWeekNum(
+      ChangeWeekNum event, Emitter<SettingsState> emit) async {
+    String path = await DatabaseService.getStoragePath();
+
+    List<dynamic> dbStatus =
+        await DatabaseService.initDatabase(path, "settings");
+
+    if (state.settings.numOfWeeks + 1 > 4) {
+      String query = "UPDATE settings SET settingValue = '${1}' WHERE id = 2";
+
+      await DatabaseService.runInsertQuery(dbStatus[1], query);
+
+      emit(
+        SettingsState.setValues(
+          Settings(state.settings.langID, 1, state.settings.theme),
+          state.status,
+        ),
+      );
+    } else {
+      String query =
+          "UPDATE settings SET settingValue = '${state.settings.numOfWeeks + 1}' WHERE id = 2";
+
+      await DatabaseService.runInsertQuery(dbStatus[1], query);
+
+      emit(
+        SettingsState.setValues(
+          Settings(state.settings.langID, state.settings.numOfWeeks + 1,
+              state.settings.theme),
+          state.status,
+        ),
+      );
+    }
   }
 
   Future<List<Map<dynamic, dynamic>>> _readSettings(

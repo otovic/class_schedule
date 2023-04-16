@@ -39,7 +39,8 @@ class MainScreen extends StatelessWidget {
             if (previous.settings.langID != current.settings.langID)
               return true;
             if (previous.settings.theme != current.settings.theme) return true;
-            print(current.settings.theme);
+            if (previous.settings.numOfWeeks != current.settings.numOfWeeks)
+              return true;
             return false;
           },
           builder: (BuildContext context, SettingsState state) {

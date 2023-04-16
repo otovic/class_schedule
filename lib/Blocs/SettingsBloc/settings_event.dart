@@ -35,3 +35,7 @@ class ChangeLanguage extends SettingsEvents {
   final String language;
   const ChangeLanguage(this.language);
 }
+
+class ChangeWeekNum extends SettingsEvents {
+  const ChangeWeekNum();
+}

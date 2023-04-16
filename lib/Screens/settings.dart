@@ -4,6 +4,7 @@ import 'package:classschedule_app/constants/themes.dart';
 import 'package:classschedule_app/constants/words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Blocs/SettingsBloc/settings_bloc.dart';
 import '../Services/utility.dart';
@@ -13,6 +14,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    OverlayEntry? entry;
     final settingsBloc = BlocProvider.of<SettingsBloc>(context);
     return BlocBuilder(
       bloc: settingsBloc,
@@ -27,6 +29,19 @@ class SettingsScreen extends StatelessWidget {
                 ? iconThemeDark
                 : iconThemeLight,
             backgroundColor: Theme.of(context).primaryColor,
+          ),
+          bottomNavigationBar: BottomAppBar(
+            color: Theme.of(context).primaryColor,
+            height: MediaQuery.of(context).size.shortestSide * 0.15,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Image.asset(
+                  'assets/logo.png',
+                  width: MediaQuery.of(context).size.shortestSide * 0.1,
+                )
+              ],
+            ),
           ),
           body: SizedBox(
             width: double.infinity,
@@ -45,13 +60,29 @@ class SettingsScreen extends StatelessWidget {
                         : dark[settingsBloc.state.settings.langID]!,
                   ),
                   OptionSelector(
-                      icon: Icons.language_outlined,
+                    icon: Icons.language_outlined,
+                    function: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const ChooseLanguage()));
+                    },
+                    title: language[settingsBloc.state.settings.langID]!,
+                    value: UtilityService.getLanguage(state.settings.langID),
+                  ),
+                  OptionSelector(
+                    icon: Icons.view_week_outlined,
+                    function: () {
+                      settingsBloc.add(const ChangeWeekNum());
+                    },
+                    title: numOfWeeks[settingsBloc.state.settings.langID]!,
+                    value: state.settings.numOfWeeks.toString(),
+                  ),
+                  OptionSelector(
+                      icon: Icons.catching_pokemon_outlined,
                       function: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => const ChooseLanguage()));
+                        _launchURL();
                       },
-                      title: language[settingsBloc.state.settings.langID]!,
-                      value: UtilityService.getLanguage(state.settings.langID)),
+                      title: "GitHub",
+                      value: checkGitHub[state.settings.langID]!),
                 ],
               ),
             ),
@@ -59,5 +90,15 @@ class SettingsScreen extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+_launchURL() async {
+  const url = 'https://github.com/petarotovic/class_schedule';
+  final uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri);
+  } else {
+    throw 'Could not launch $url';
   }
 }
