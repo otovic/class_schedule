@@ -2,8 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../Services/database_service.dart';
-import '../../../constants/constants.dart';
-import '../../Models/SettingsModel.dart';
+import '../../Models/settings_model.dart';
 
 part 'settings_event.dart';
 part 'settings_state.dart';
@@ -18,48 +17,45 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
     on<ChangeTheme>((event, emit) => _changeTheme(event, emit));
     on<ChangeLanguage>((event, emit) => _changeLanguage(event, emit));
     on<ChangeWeekNum>((event, emit) => _changeWeekNum(event, emit));
+    on<ChangeSelectedWeek>((event, emit) => _setNewWeek(event, emit));
     add(const InitSettings());
-  }
-
-  Future<void> _changeSettings(
-      SettingsEvents event, Emitter<SettingsState> emit) async {
-    emit(SettingsState.setValues(Settings.defaultValues, loadStatus.loading));
-  }
-
-  Future<void> _revert(
-      SettingsEvents event, Emitter<SettingsState> emit) async {
-    emit(SettingsState.setValues(Settings.defaultValues, loadStatus.firstLoad));
   }
 
   Future<void> _initSettings(
       SettingsEvents event, Emitter<SettingsState> emit) async {
     try {
       String path = await DatabaseService.getStoragePath();
-      List<dynamic> dbStatus =
+      List<dynamic> settingsDb =
           await DatabaseService.initDatabase(path, "settings");
 
-      if (dbStatus[0] == false) {
+      if (settingsDb[0] == false) {
         emit(SettingsState.setValues(
             Settings.defaultValues, loadStatus.firstLoad));
         return;
       }
 
-      List<Map<dynamic, dynamic>> result =
-          await _readSettings(dbStatus[1], readSettingsQuery);
+      List<Map<dynamic, dynamic>> settingsRes =
+          await _readSettings(settingsDb[1], "SELECT * FROM settings");
 
-      if (result.length != 4) {
+      if (settingsRes.length != 5) {
         emit(SettingsState.setValues(
             Settings.defaultValues, loadStatus.firstLoad));
         return;
       }
-
-      emit(SettingsState.setValues(
-          Settings(result[0]['settingValue'].toString(),
-              int.parse(result[1]['settingValue']), result[3]['settingValue']),
-          loadStatus.loaded));
+      emit(
+        SettingsState.setValues(
+            Settings(
+              settingsRes[0]['settingValue'].toString(),
+              int.parse(settingsRes[1]['settingValue']),
+              settingsRes[3]['settingValue'],
+              int.parse(settingsRes[4]['settingValue']),
+            ),
+            loadStatus.loaded),
+      );
     } catch (error) {
+      print(error);
       emit(SettingsState.setValues(
-          const Settings("en", 1, 'light'), loadStatus.error));
+          const Settings("en", 1, 'light', 1), loadStatus.error));
     }
   }
 
@@ -90,8 +86,13 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
 
     await DatabaseService.runInsertQuery(dbStatus[1], query);
 
+    query =
+        "INSERT INTO settings (id, settingID, settingValue) VALUES (5, 5, '1')";
+
+    await DatabaseService.runInsertQuery(dbStatus[1], query);
+
     emit(SettingsState.setValues(
-        Settings(event.lang, 1, 'light'), loadStatus.loaded));
+        Settings(event.lang, 1, 'light', 1), loadStatus.loaded));
   }
 
   Future<void> _changeTheme(
@@ -108,8 +109,11 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
 
     emit(
       SettingsState.setValues(
-          Settings(state.settings.langID, state.settings.numOfWeeks,
-              state.settings.theme == 'light' ? 'dark' : 'light'),
+          Settings(
+              state.settings.langID,
+              state.settings.numOfWeeks,
+              state.settings.theme == 'light' ? 'dark' : 'light',
+              state.settings.selectedWeek),
           state.status),
     );
   }
@@ -127,8 +131,8 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
     await DatabaseService.runInsertQuery(dbStatus[1], query);
 
     emit(SettingsState.setValues(
-        Settings(
-            event.language, state.settings.numOfWeeks, state.settings.theme),
+        Settings(event.language, state.settings.numOfWeeks,
+            state.settings.theme, state.settings.selectedWeek),
         state.status));
   }
 
@@ -146,7 +150,8 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
 
       emit(
         SettingsState.setValues(
-          Settings(state.settings.langID, 1, state.settings.theme),
+          Settings(state.settings.langID, 1, state.settings.theme,
+              state.settings.selectedWeek),
           state.status,
         ),
       );
@@ -159,7 +164,7 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
       emit(
         SettingsState.setValues(
           Settings(state.settings.langID, state.settings.numOfWeeks + 1,
-              state.settings.theme),
+              state.settings.theme, state.settings.selectedWeek),
           state.status,
         ),
       );
@@ -169,5 +174,23 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
   Future<List<Map<dynamic, dynamic>>> _readSettings(
       Database db, String query) async {
     return await DatabaseService.executeQuery(db, query);
+  }
+
+  Future<void> _setNewWeek(
+      ChangeSelectedWeek event, Emitter<SettingsState> emit) async {
+    try {
+      String path = await DatabaseService.getStoragePath();
+
+      List<dynamic> dbStatus =
+          await DatabaseService.initDatabase(path, "settings");
+
+      await DatabaseService.runInsertQuery(dbStatus[1],
+          "UPDATE settings SET settingValue = '${event.newWeek}' WHERE id = 5");
+
+      emit(SettingsState.setValues(
+          Settings(state.settings.langID, state.settings.numOfWeeks,
+              state.settings.theme, event.newWeek),
+          state.status));
+    } catch (error) {}
   }
 }

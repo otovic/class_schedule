@@ -8,3 +8,12 @@ class ChangeDate extends ScheduleEvent {
   final DateTime newDate;
   const ChangeDate(this.newDate);
 }
+
+class ChangeWeek extends ScheduleEvent {
+  final int newWeek;
+  const ChangeWeek(this.newWeek);
+}
+
+class InitWeek extends ScheduleEvent {
+  const InitWeek();
+}

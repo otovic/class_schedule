@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../Blocs/SettingsBloc/settings_bloc.dart';
+import '../Screens/add_subject.dart';
 import '../Services/date_service.dart';
 
 class MainScreen extends StatelessWidget {
@@ -30,17 +31,29 @@ class MainScreen extends StatelessWidget {
 
     return BlocBuilder(
       bloc: scheduleBloc,
-      buildWhen: (ScheduleState previous, ScheduleState current) =>
-          previous.currentDate.weekday != current.currentDate.weekday,
+      buildWhen: (ScheduleState previous, ScheduleState current) {
+        if (previous.currentDate.weekday != current.currentDate.weekday) {
+          return true;
+        }
+        return false;
+      },
       builder: (BuildContext context, ScheduleState schState) {
         return BlocBuilder(
           bloc: settingsBloc,
           buildWhen: (SettingsState previous, SettingsState current) {
-            if (previous.settings.langID != current.settings.langID)
+            if (previous.settings.langID != current.settings.langID) {
               return true;
-            if (previous.settings.theme != current.settings.theme) return true;
-            if (previous.settings.numOfWeeks != current.settings.numOfWeeks)
+            }
+            if (previous.settings.theme != current.settings.theme) {
               return true;
+            }
+            if (previous.settings.numOfWeeks != current.settings.numOfWeeks) {
+              return true;
+            }
+            if (previous.settings.selectedWeek !=
+                current.settings.selectedWeek) {
+              return true;
+            }
             return false;
           },
           builder: (BuildContext context, SettingsState state) {
@@ -48,7 +61,10 @@ class MainScreen extends StatelessWidget {
               appBar: AppBar(
                 elevation: 0,
                 actions: state.settings.numOfWeeks != 1
-                    ? [WeekSelector(state.settings.numOfWeeks)]
+                    ? [
+                        WeekSelector(
+                            state.settings.numOfWeeks, state.settings.langID)
+                      ]
                     : [],
                 title: Text(
                   DateService.getWeekDayFromNum(
@@ -67,7 +83,8 @@ class MainScreen extends StatelessWidget {
                     CircularIcon(
                       icon: Icons.add_box_outlined,
                       onTapFunc: () {
-                        print("TEST");
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => const AddSubject()));
                       },
                     ),
                     CircularIcon(
@@ -93,9 +110,10 @@ class MainScreen extends StatelessWidget {
                   Expanded(
                     child: Center(
                       child: Text(
-                        state.settings.theme,
+                        state.settings.toString(),
                         // noClass[state.settings.langID].toString(),
                         textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),

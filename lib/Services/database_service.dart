@@ -10,7 +10,7 @@ class DatabaseService {
   static Future<List<dynamic>> initDatabase(String path, String dbName) async {
     bool dbExists = true;
 
-    Database database = await openDatabase(path + dbName, version: 3,
+    Database database = await openDatabase(path + dbName, version: 4,
         onCreate: (Database db, int version) async {
       await db.execute(dbCreateQuery[dbName]!).then((_) => dbExists = false);
     });
