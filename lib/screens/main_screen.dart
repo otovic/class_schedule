@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
 import 'package:classschedule_app/Screens/choose_language.dart';
 import 'package:classschedule_app/Screens/settings.dart';
@@ -5,6 +7,7 @@ import 'package:classschedule_app/Widgets/day_selector_banner.dart';
 import 'package:classschedule_app/Widgets/week_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../Blocs/SettingsBloc/settings_bloc.dart';
 import '../Screens/add_subject.dart';
@@ -83,14 +86,24 @@ class MainScreen extends StatelessWidget {
                     CircularIcon(
                       icon: Icons.add_box_outlined,
                       onTapFunc: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => const AddSubject()));
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => AddSubject()));
                       },
                     ),
                     CircularIcon(
                       icon: Icons.notifications_outlined,
                       onTapFunc: () {
-                        print("TEST");
+                        var _productIdList = {
+                          'product1',
+                          'product2',
+                          'product3'
+                        };
+
+                        final InAppPurchase _inAppPurchase =
+                            InAppPurchase.instance;
+                        late StreamSubscription<List<PurchaseDetails>>
+                            _subscription;
+                        List<ProductDetails> _products = <ProductDetails>[];
                       },
                     ),
                     CircularIcon(
@@ -110,10 +123,10 @@ class MainScreen extends StatelessWidget {
                   Expanded(
                     child: Center(
                       child: Text(
-                        state.settings.toString(),
+                        state.settings.selectedWeek.toString(),
                         // noClass[state.settings.langID].toString(),
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                   ),

@@ -148,10 +148,13 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
 
       await DatabaseService.runInsertQuery(dbStatus[1], query);
 
+      query = "UPDATE settings SET settingValue = '${1}' WHERE id = 5";
+
+      await DatabaseService.runInsertQuery(dbStatus[1], query);
+
       emit(
         SettingsState.setValues(
-          Settings(state.settings.langID, 1, state.settings.theme,
-              state.settings.selectedWeek),
+          Settings(state.settings.langID, 1, state.settings.theme, 1),
           state.status,
         ),
       );

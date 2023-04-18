@@ -2,12 +2,14 @@ import 'package:classschedule_app/Screens/choose_language.dart';
 import 'package:classschedule_app/Widgets/option_selector.dart';
 import 'package:classschedule_app/constants/themes.dart';
 import 'package:classschedule_app/constants/words.dart';
+import 'package:classschedule_app/screens/donators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../Blocs/SettingsBloc/settings_bloc.dart';
 import '../Services/utility.dart';
+import 'donations.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -77,12 +79,32 @@ class SettingsScreen extends StatelessWidget {
                     value: state.settings.numOfWeeks.toString(),
                   ),
                   OptionSelector(
-                      icon: Icons.catching_pokemon_outlined,
-                      function: () {
-                        _launchURL();
-                      },
-                      title: "GitHub",
-                      value: checkGitHub[state.settings.langID]!),
+                    icon: Icons.catching_pokemon_outlined,
+                    function: () {
+                      UtilityService.launchURL(
+                          'https://github.com/petarotovic/class_schedule');
+                    },
+                    title: "GitHub",
+                    value: checkGitHub[state.settings.langID]!,
+                  ),
+                  OptionSelector(
+                    icon: Icons.monetization_on_outlined,
+                    function: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => const Donations()));
+                    },
+                    title: donations[state.settings.langID]!,
+                    value: donationsDesc[state.settings.langID]!,
+                  ),
+                  OptionSelector(
+                    icon: Icons.person_2_outlined,
+                    function: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => const Donators()));
+                    },
+                    title: donators[state.settings.langID]!,
+                    value: donatorsDesc[state.settings.langID]!,
+                  ),
                 ],
               ),
             ),

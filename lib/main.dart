@@ -11,6 +11,7 @@ import './constants/themes.dart';
 void main() {
   final settingsBloc = SettingsBloc();
   final scheduleBloc = ScheduleBloc();
+
   runApp(
     MultiBlocProvider(
       providers: [
@@ -30,12 +31,12 @@ void main() {
           builder: (BuildContext context, SettingsState state) {
             return MaterialApp(
               routes: {
-                '/choose-language': (context) => ChooseLanguage(),
-                '/main-screen': (context) => MainScreen(),
+                '/choose-language': (context) => const ChooseLanguage(),
+                '/main-screen': (context) => const MainScreen(),
               },
               theme: state.settings.theme == 'light' ? lightTheme : darkTheme,
               debugShowCheckedModeBanner: false,
-              home: LoaderScreen(),
+              home: const LoaderScreen(),
             );
           }),
     ),

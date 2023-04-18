@@ -55,8 +55,8 @@ class OptionSelector extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.shortestSide * 0.05,
                     width: double.infinity,
+                    height: MediaQuery.of(context).size.shortestSide * 0.05,
                     child: Text(
                       value,
                       style: TextStyle(
@@ -64,6 +64,7 @@ class OptionSelector extends StatelessWidget {
                         fontSize:
                             MediaQuery.of(context).size.shortestSide * 0.04,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   )
                 ],

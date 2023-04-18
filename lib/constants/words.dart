@@ -35,3 +35,45 @@ Map<String, String> checkGitHub = {
   "en": "Check this project out on GitHub",
   "sr": "Погледајте овај пројекат на ГитХаб-у"
 };
+Map<String, String> donations = {"en": "Donate", "sr": "Донације"};
+Map<String, String> donators = {"en": "Supporters", "sr": "Донатори"};
+Map<String, String> quiet = {
+  "en": "It's quiet in here.",
+  "sr": "За сад је баш тихо."
+};
+Map<String, String> donatorsDesc = {
+  "en": "people who supported the app",
+  "sr": "Људи који су подржали апликацију"
+};
+Map<String, String> donationsDesc = {
+  "en": "Help me pay off my scholarship",
+  "sr": "Помогните ми да отплатим школарину"
+};
+Map<String, String> donations1 = {
+  "en":
+      "This app is completely free, you don't have to pay for any feature to get it unlocked.",
+  "sr":
+      "Ова апликација је потпуно бесплатна, не морате да плаћате ниједну функцију да бисте је откључали."
+};
+Map<String, String> donations2 = {
+  "en":
+      "If you like the app you can support me and help me raise 8000 \$ for my 4 year scholarship (2000 \$ per year).",
+  "sr":
+      "Ако вам се свиђа апликација, можете ме подржати и помоћи ми да скупим 8000 \$ за моју четворогодишњу школарину (2000 \$ годишње)."
+};
+Map<String, String> donations3 = {
+  "en":
+      "I would also like to buy Macbook so i can release my apps on Apple App Store.",
+  "sr":
+      "Такође бих желео да купим Macbook лаптоп како бих могао да објавим своје апликације у Apple App Store-u."
+};
+Map<String, String> donations4 = {
+  "en": "You can support me for the price of coffee.",
+  "sr": "Можете ме подржати за цену једне кафе."
+};
+Map<String, String> donations5 = {
+  "en":
+      "Or you can support me with a custom amount donation on buy me a coffee website and i will list your name in the supporters section of the app.",
+  "sr":
+      "Или ме можете подржати донацијом прилагођеног износа на вебсајту Buy Me a Coffee и ја ћу додати ваше име у донатори одељку у апликацији."
+};
