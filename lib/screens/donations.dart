@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-import '../constants/words.dart';
 import '../constants/themes.dart';
+import '../constants/words.dart';
 
 class Donations extends StatefulWidget {
   const Donations({Key? key}) : super(key: key);
@@ -28,8 +28,7 @@ class _DonationsState extends State<Donations> {
       _listenToPurchaseUpdated(purchaseDetailsList);
     }, onDone: () {
       _subscription.cancel();
-    }, onError: (error) {
-    });
+    }, onError: (error) {});
     super.initState();
   }
 
@@ -76,10 +75,8 @@ class _DonationsState extends State<Donations> {
     }
     setState(() {});
     List<ProductDetails> products = response.productDetails;
-    print(products[0].title);
 
-    final ProductDetails productDetails =
-        products[0]; // Saved earlier from queryProductDetails().
+    final ProductDetails productDetails = products[0];
     final PurchaseParam purchaseParam =
         PurchaseParam(productDetails: productDetails);
 

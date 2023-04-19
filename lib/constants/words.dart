@@ -17,6 +17,18 @@ Map<String, String> september = {"en": "September", "sr": "Септембар"};
 Map<String, String> october = {"en": "October", "sr": "Октобар"};
 Map<String, String> november = {"en": "November", "sr": "Новембар"};
 Map<String, String> december = {"en": "December", "sr": "Децембар"};
+Map<String, String> subjectColor = {
+  "en": "Subject color",
+  "sr": "Боја предмета"
+};
+Map<String, String> addSubject = {"en": "Add Subject", "sr": "Додај Предмет"};
+Map<String, String> subjectName = {"en": "Subject name", "sr": "Име предмета"};
+Map<String, String> subjectID = {"en": "Subject ID", "sr": "Шифра предмета"};
+Map<String, String> subjectProfessor = {
+  "en": "Subject professor",
+  "sr": "Предметни професор"
+};
+Map<String, String> subjectClassroom = {"en": "Classroom", "sr": "Учионица"};
 Map<String, String> noClass = {
   "en": "No class on this day",
   "sr": "Нема часова овог дана"
@@ -42,7 +54,7 @@ Map<String, String> quiet = {
   "sr": "За сад је баш тихо."
 };
 Map<String, String> donatorsDesc = {
-  "en": "people who supported the app",
+  "en": "People who supported the app",
   "sr": "Људи који су подржали апликацију"
 };
 Map<String, String> donationsDesc = {

@@ -1,9 +1,11 @@
-import 'dart:async';
-
+import 'package:classschedule_app/Blocs/SettingsBloc/settings_bloc.dart';
+import 'package:classschedule_app/Widgets/input_dialog.dart';
+import 'package:classschedule_app/constants/words.dart';
+import 'package:classschedule_app/screens/color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-var _productIdList = {'product1', 'product2', 'product3'};
+import '../constants/themes.dart';
 
 class AddSubject extends StatefulWidget {
   AddSubject({Key? key}) : super(key: key);
@@ -13,121 +15,121 @@ class AddSubject extends StatefulWidget {
 }
 
 class _AddSubjectState extends State<AddSubject> {
-  late StreamSubscription<List<PurchaseDetails>> _subscription;
-  String status = 'NISTA';
-  final InAppPurchase _inAppPurchase = InAppPurchase.instance;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController idController = TextEditingController();
+  TextEditingController professorController = TextEditingController();
+  TextEditingController classroomController = TextEditingController();
+  Color selectedColor = const Color.fromRGBO(0, 123, 255, 1);
 
-  @override
-  void initState() {
-    final Stream<List<PurchaseDetails>> purchaseUpdated =
-        InAppPurchase.instance.purchaseStream;
-    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
-      _listenToPurchaseUpdated(purchaseDetailsList);
-    }, onDone: () {
-      _subscription.cancel();
-    }, onError: (error) {
-      setState(() {
-        status = 'GRESKA';
-      });
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-
-  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
-    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      if (purchaseDetails.status == PurchaseStatus.pending) {
-        setState(() {
-          status = 'CEKAM';
-        });
-      } else {
-        if (purchaseDetails.status == PurchaseStatus.error) {
-          setState(() {
-            status = 'GRESKA';
-          });
-        } else if (purchaseDetails.status == PurchaseStatus.purchased ||
-            purchaseDetails.status == PurchaseStatus.restored) {
-          bool valid = true;
-          if (valid) {
-            setState(() {
-              status = 'VALIDNO';
-            });
-          } else {
-            setState(() {
-              status = 'NIJE VALIDNO';
-            });
-          }
-        }
-        if (purchaseDetails.pendingCompletePurchase) {
-          await InAppPurchase.instance.completePurchase(purchaseDetails);
-          setState(() {
-            status = 'KUPLJENO';
-          });
-        }
-      }
-    });
-  }
-
-  String txt = "NIJE ZAPOCETO";
-
-  Future<void> initPur() async {
-    final bool available = await InAppPurchase.instance.isAvailable();
-    if (!available) {
-      setState(() {
-        txt = 'NE RADI';
-      });
-      return;
-    }
+  void setCollor(Color color) {
     setState(() {
-      txt = 'RADi';
+      selectedColor = color;
     });
-    const Set<String> _kIds = <String>{'donation'};
-    final ProductDetailsResponse response =
-        await InAppPurchase.instance.queryProductDetails(_kIds);
-
-    if (response.notFoundIDs.isNotEmpty) {
-      setState(() {
-        txt = 'ne radi 2';
-      });
-    }
-    setState(() {
-      txt = 'radi 2';
-    });
-    List<ProductDetails> products = response.productDetails;
-    print(products[0].title);
-
-    final ProductDetails productDetails =
-        products[0]; // Saved earlier from queryProductDetails().
-    final PurchaseParam purchaseParam =
-        PurchaseParam(productDetails: productDetails);
-
-    InAppPurchase.instance.buyConsumable(purchaseParam: purchaseParam);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: const Text("Add Subject"),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      body: Column(
-        children: [
-          ElevatedButton(
-            child: Text(txt),
-            onPressed: () {
-              initPur();
-            },
+    SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
+    return BlocBuilder(
+      bloc: settingsBloc,
+      builder: (BuildContext context, SettingsState state) {
+        return Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            title: Text(
+              addSubject[state.settings.langID]!,
+              style: TextStyle(color: Theme.of(context).backgroundColor),
+            ),
+            backgroundColor: Theme.of(context).primaryColor,
+            iconTheme: settingsBloc.state.settings.theme == 'light'
+                ? iconThemeDark
+                : iconThemeLight,
           ),
-          Text(status)
-        ],
-      ),
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            margin: const EdgeInsets.all(20),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  InputDialog(
+                    placeholderText: "${subjectID[state.settings.langID]!}",
+                    controller: idController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InputDialog(
+                    placeholderText: "${subjectName[state.settings.langID]!}",
+                    controller: nameController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InputDialog(
+                    placeholderText:
+                        "${subjectProfessor[state.settings.langID]!}",
+                    controller: professorController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InputDialog(
+                    placeholderText:
+                        "${subjectClassroom[state.settings.langID]!}",
+                    controller: professorController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(left: 10, right: 10),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          child: Text(
+                            subjectColor[state.settings.langID]!,
+                            style: TextStyle(
+                                color: Theme.of(context).backgroundColor),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => ColorPickerScreen(
+                                  selectColor: (color) {
+                                    setCollor(color);
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border:
+                                  Border.all(color: Colors.white38, width: 3),
+                              color: selectedColor,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
