@@ -9,18 +9,25 @@ class DatabaseService {
 
   static Future<List<dynamic>> initDatabase(String path, String dbName) async {
     bool dbExists = true;
-
-    Database database = await openDatabase(path + dbName, version: 4,
-        onCreate: (Database db, int version) async {
-      await db.execute(dbCreateQuery[dbName]!).then((_) => dbExists = false);
-    });
+    Database database = await openDatabase(
+      path + dbName,
+      version: 4,
+      onCreate: (Database db, int version) async {
+        await db.execute(dbCreateQuery[dbName]!).then((_) => dbExists = false);
+      },
+    );
 
     return [dbExists, database];
   }
 
   static Future<bool> runInsertQuery(Database db, String query) async {
-    int id1 = await db.rawInsert(query);
-    return true;
+    try {
+      await db.rawInsert(query);
+      return true;
+    } on Exception catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   static Future<bool> Truncate(Database db) async {

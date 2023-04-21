@@ -38,6 +38,9 @@ class MainScreen extends StatelessWidget {
         if (previous.currentDate.weekday != current.currentDate.weekday) {
           return true;
         }
+        if (previous.subjects.length != current.subjects.length) {
+          return true;
+        }
         return false;
       },
       builder: (BuildContext context, ScheduleState schState) {
@@ -122,13 +125,9 @@ class MainScreen extends StatelessWidget {
                   DaySelectorBanner(),
                   Expanded(
                     child: Center(
-                      child: Text(
-                        state.settings.selectedWeek.toString(),
-                        // noClass[state.settings.langID].toString(),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
+                        child: Column(
+                      children: [],
+                    )),
                   ),
                 ],
               ),

@@ -17,3 +17,12 @@ class ChangeWeek extends ScheduleEvent {
 class InitWeek extends ScheduleEvent {
   const InitWeek();
 }
+
+class InitSchedule extends ScheduleEvent {
+  const InitSchedule();
+}
+
+class AddNewSubject extends ScheduleEvent {
+  final Subject subject;
+  const AddNewSubject(this.subject);
+}

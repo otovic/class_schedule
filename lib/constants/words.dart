@@ -28,11 +28,14 @@ Map<String, String> subjectProfessor = {
   "en": "Subject professor",
   "sr": "Предметни професор"
 };
+Map<String, String> to = {"en": "to", "sr": "до"};
 Map<String, String> subjectClassroom = {"en": "Classroom", "sr": "Учионица"};
 Map<String, String> noClass = {
   "en": "No class on this day",
   "sr": "Нема часова овог дана"
 };
+Map<String, String> addClassT = {"en": "Add class", "sr": "Додај час"};
+Map<String, String> classTime = {"en": "Class Time", "sr": "Време часа"};
 Map<String, String> chooseLang = {
   "en": "Choose language",
   "sr": "Изаберите језик"

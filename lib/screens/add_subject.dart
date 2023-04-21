@@ -1,6 +1,9 @@
+import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
 import 'package:classschedule_app/Blocs/SettingsBloc/settings_bloc.dart';
+import 'package:classschedule_app/Widgets/class_input_week.dart';
 import 'package:classschedule_app/Widgets/input_dialog.dart';
 import 'package:classschedule_app/constants/words.dart';
+import 'package:classschedule_app/models/subject_model.dart';
 import 'package:classschedule_app/screens/color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +23,21 @@ class _AddSubjectState extends State<AddSubject> {
   TextEditingController professorController = TextEditingController();
   TextEditingController classroomController = TextEditingController();
   Color selectedColor = const Color.fromRGBO(0, 123, 255, 1);
+  TimeOfDay startTime = TimeOfDay(hour: 0, minute: 0);
+  TimeOfDay endTime = TimeOfDay(hour: 0, minute: 0);
+
+  Subject generateSubject(ScheduleState state) {
+    return Subject(
+        subjectID: idController.text,
+        nameOfSubject: nameController.text,
+        professorName: professorController.text,
+        classroom: classroomController.text,
+        color: selectedColor,
+        day: state.currentDate.weekday,
+        week: state.selectedWeek,
+        startTime: startTime,
+        endTime: endTime);
+  }
 
   void setCollor(Color color) {
     setState(() {
@@ -27,9 +45,19 @@ class _AddSubjectState extends State<AddSubject> {
     });
   }
 
+  void _setStartTime(TimeOfDay time) {
+    startTime = time;
+  }
+
+  void _setEndTime(TimeOfDay time) {
+    endTime = time;
+  }
+
   @override
   Widget build(BuildContext context) {
     SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
+    ScheduleBloc scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
+
     return BlocBuilder(
       bloc: settingsBloc,
       builder: (BuildContext context, SettingsState state) {
@@ -77,22 +105,26 @@ class _AddSubjectState extends State<AddSubject> {
                   InputDialog(
                     placeholderText:
                         "${subjectClassroom[state.settings.langID]!}",
-                    controller: professorController,
+                    controller: classroomController,
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   Container(
                     width: double.infinity,
-                    margin: EdgeInsets.only(left: 10, right: 10),
                     child: Column(
                       children: [
                         Container(
                           width: double.infinity,
                           child: Text(
-                            subjectColor[state.settings.langID]!,
+                            "${subjectColor[state.settings.langID]!}:",
                             style: TextStyle(
-                                color: Theme.of(context).backgroundColor),
+                              color: Theme.of(context).backgroundColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize:
+                                  MediaQuery.of(context).size.shortestSide *
+                                      0.045,
+                            ),
                           ),
                         ),
                         const SizedBox(
@@ -112,9 +144,8 @@ class _AddSubjectState extends State<AddSubject> {
                           },
                           child: Container(
                             width: double.infinity,
-                            height: 40,
+                            height: 50,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
                               border:
                                   Border.all(color: Colors.white38, width: 3),
                               color: selectedColor,
@@ -122,6 +153,61 @@ class _AddSubjectState extends State<AddSubject> {
                           ),
                         )
                       ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    child: Text(
+                      "${classTime[settingsBloc.state.settings.langID]!}:",
+                      style: TextStyle(
+                        color: Theme.of(context).backgroundColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize:
+                            MediaQuery.of(context).size.shortestSide * 0.045,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        ClassWeekInput(
+                          dayNum: scheduleBloc.state.currentDate.weekday,
+                          lang: settingsBloc.state.settings.langID,
+                          setStartTime: (time) {
+                            _setStartTime(time);
+                          },
+                          setEndTime: (time) {
+                            _setEndTime(time);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      scheduleBloc.add(
+                        AddNewSubject(
+                          generateSubject(scheduleBloc.state),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.shortestSide * 0.6,
+                      height: 50,
+                      child: Center(
+                        child: Text(
+                            addClassT[settingsBloc.state.settings.langID]!),
+                      ),
                     ),
                   ),
                 ],

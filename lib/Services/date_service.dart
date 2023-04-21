@@ -11,17 +11,17 @@ class DateService {
         case 1:
           return monday[lang];
         case 2:
-          return monday[lang];
+          return tuesday[lang];
         case 3:
-          return monday[lang];
+          return wednesday[lang];
         case 4:
-          return monday[lang];
+          return thursday[lang];
         case 5:
-          return monday[lang];
+          return friday[lang];
         case 6:
-          return monday[lang];
+          return saturday[lang];
         case 7:
-          return monday[lang];
+          return sunday[lang];
         default:
           return "Monday";
       }

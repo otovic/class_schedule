@@ -53,7 +53,6 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
             loadStatus.loaded),
       );
     } catch (error) {
-      print(error);
       emit(SettingsState.setValues(
           const Settings("en", 1, 'light', 1), loadStatus.error));
     }
