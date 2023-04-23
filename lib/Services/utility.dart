@@ -49,4 +49,8 @@ class UtilityService {
       double.parse(values[3]),
     );
   }
+
+  static String generateTimeText(TimeOfDay startTime, TimeOfDay endTime) {
+    return "${formatTime(startTime.hour)}:${formatTime(startTime.minute)} - ${formatTime(endTime.hour)}:${formatTime(endTime.minute)}";
+  }
 }

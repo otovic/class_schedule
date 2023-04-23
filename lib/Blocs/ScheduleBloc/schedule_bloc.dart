@@ -37,23 +37,11 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       "INSERT INTO class_schedule (subjectID, subjectName, professor, classroom, color, week, day, startTime, endTime) VALUES ('${subject.subjectID}', '${subject.nameOfSubject}', '${subject.professorName}', '${subject.classroom}', '${UtilityService.encodeColor(subject.color)}', ${subject.day}, ${subject.week}, '${UtilityService.encodeTime(subject.startTime)}', '${UtilityService.encodeTime(subject.endTime)}')",
     );
 
-    List<Map<dynamic, dynamic>> list = await DatabaseService.executeQuery(
-        dbStatus[1], "SELECT * FROM class_schedule");
-
     List<Subject> newList = [];
 
-    list.forEach((element) {
-      newList.add(Subject(
-          subjectID: element['subjectID'],
-          nameOfSubject: element['subjectName'],
-          professorName: element['professor'],
-          classroom: element['classroom'],
-          color: UtilityService.decodeColor(element['color']),
-          day: element['day'],
-          week: element['week'],
-          startTime: UtilityService.decodeTime(element['startTime']),
-          endTime: UtilityService.decodeTime(element['endTime'])));
-    });
+    for (var element in state.subjects) {
+      newList.add(element);
+    }
 
     emit(
       ScheduleState.init(
@@ -73,8 +61,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     List<Map<dynamic, dynamic>> list = await DatabaseService.executeQuery(
         dbStatus[1], "SELECT * FROM class_schedule");
 
-    print(list);
-
     List<Subject> newList = [];
 
     list.forEach((element) {
@@ -89,8 +75,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           startTime: UtilityService.decodeTime(element['startTime']),
           endTime: UtilityService.decodeTime(element['endTime'])));
     });
-
-    print(newList);
 
     emit(
       ScheduleState.init(

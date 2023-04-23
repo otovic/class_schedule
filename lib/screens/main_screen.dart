@@ -12,6 +12,8 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import '../Blocs/SettingsBloc/settings_bloc.dart';
 import '../Screens/add_subject.dart';
 import '../Services/date_service.dart';
+import '../Widgets/subject_bubble.dart';
+import '../models/subject_model.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -23,6 +25,16 @@ class MainScreen extends StatelessWidget {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (_) => ChooseLanguage()));
     }
+  }
+
+  List<Widget> _getWidgets(List<Subject> list) {
+    List<Widget> widgets = [];
+
+    for (var subject in list) {
+      widgets.add(SubjectBubble(subject: subject));
+    }
+
+    return widgets;
   }
 
   @override
@@ -124,10 +136,13 @@ class MainScreen extends StatelessWidget {
                 children: [
                   DaySelectorBanner(),
                   Expanded(
-                    child: Center(
+                    child: SingleChildScrollView(
+                      child: Center(
                         child: Column(
-                      children: [],
-                    )),
+                          children: _getWidgets(schState.subjects),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
