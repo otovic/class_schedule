@@ -86,4 +86,14 @@ class DateService {
     if (dt1.month == dt2.month && dt1.weekday == dt2.weekday) return true;
     return false;
   }
+
+  static String encodeDate(DateTime date) {
+    return "${date.day}:${date.month}:${date.year}";
+  }
+
+  static DateTime decodeDate(String date) {
+    List<String> split = date.split(":");
+    return DateTime(int.parse(split[2].replaceAll(")", "")),
+        int.parse(split[1]), int.parse(split[0]));
+  }
 }

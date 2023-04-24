@@ -26,3 +26,8 @@ class AddNewSubject extends ScheduleEvent {
   final Subject subject;
   const AddNewSubject(this.subject);
 }
+
+class AddNewHomework extends ScheduleEvent {
+  final Homework homework;
+  const AddNewHomework(this.homework);
+}

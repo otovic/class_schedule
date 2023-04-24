@@ -29,12 +29,21 @@ Map<String, String> subjectProfessor = {
   "en": "Subject professor",
   "sr": "Предметни професор"
 };
+Map<String, String> fillAllFields = {
+  "en": "Fill required fields",
+  "sr": "Попуните потребна поља"
+};
+Map<String, String> fillCorrectDate = {
+  "en": "Select valid date",
+  "sr": "Изаберите важећи датум"
+};
 Map<String, String> to = {"en": "to", "sr": "до"};
 Map<String, String> subjectClassroom = {"en": "Classroom", "sr": "Учионица"};
 Map<String, String> homeworkName = {
   "en": "Homework name",
   "sr": "Назив домаћег"
 };
+Map<String, String> addWord = {"en": "Add", "sr": "Додај"};
 Map<String, String> homeworkDesc = {
   "en": "Homework description",
   "sr": "Опис домаћег"
@@ -43,6 +52,7 @@ Map<String, String> noClass = {
   "en": "No class on this day",
   "sr": "Нема часова овог дана"
 };
+Map<String, String> dueDate = {"en": "Due date", "sr": "Рок"};
 Map<String, String> subject = {"en": "Subject", "sr": "Предмет"};
 Map<String, String> addClassT = {"en": "Add class", "sr": "Додај час"};
 Map<String, String> classTime = {"en": "Class Time", "sr": "Време часа"};

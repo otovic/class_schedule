@@ -31,7 +31,7 @@ class DatabaseService {
   }
 
   static Future<bool> Truncate(Database db) async {
-    await db.rawQuery("DELETE FROM settings WHERE id > 0");
+    await db.rawQuery("DELETE FROM homeworks WHERE id > 0");
     return true;
   }
 

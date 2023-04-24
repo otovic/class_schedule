@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../constants/themes.dart';
+import '../models/homework.dart';
 
 class AddSubject extends StatefulWidget {
   AddSubject({Key? key}) : super(key: key);
@@ -36,7 +37,8 @@ class _AddSubjectState extends State<AddSubject> {
         day: state.currentDate.weekday,
         week: state.selectedWeek,
         startTime: startTime,
-        endTime: endTime);
+        endTime: endTime,
+        homeworks: <Homework>[]);
   }
 
   void setCollor(Color color) {

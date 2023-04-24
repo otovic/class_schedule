@@ -2,6 +2,7 @@ import 'package:classschedule_app/Services/utility.dart';
 import 'package:classschedule_app/screens/add_homework.dart';
 import 'package:flutter/material.dart';
 
+import '../models/homework.dart';
 import '../models/subject_model.dart';
 
 class SubjectBubble extends StatelessWidget {
@@ -46,6 +47,8 @@ class SubjectBubble extends StatelessWidget {
             HomeWorkStripe(
               icon: Icons.home_work_outlined,
               subjectName: subject.nameOfSubject,
+              subjectID: subject.subjectID,
+              homeworks: subject.homeworks,
             )
           ],
         ),
@@ -69,7 +72,7 @@ class SubjectBubbleRow extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: Theme.of(context).backgroundColor,
+            color: Colors.black,
           ),
           const SizedBox(
             width: 5,
@@ -77,17 +80,14 @@ class SubjectBubbleRow extends StatelessWidget {
           Container(
             height: 20,
             decoration: BoxDecoration(
-                border: Border.all(
-                    color: Theme.of(context).backgroundColor, width: 1)),
+                border: Border.all(color: Colors.black, width: 1)),
           ),
           const SizedBox(
             width: 10,
           ),
           Text(
             text,
-            style: TextStyle(
-                color: Theme.of(context).backgroundColor,
-                fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -98,9 +98,67 @@ class SubjectBubbleRow extends StatelessWidget {
 class HomeWorkStripe extends StatelessWidget {
   final IconData icon;
   final String subjectName;
+  final String subjectID;
+  final List<Homework>? homeworks;
   const HomeWorkStripe(
-      {required this.icon, required this.subjectName, Key? key})
+      {required this.icon,
+      required this.subjectName,
+      required this.subjectID,
+      required this.homeworks,
+      Key? key})
       : super(key: key);
+
+  List<Widget> _generateWidgets(BuildContext context) {
+    List<Widget> list = [];
+
+    list.add(Container(
+      width: 40,
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => AddHomework(
+                subjectname: subjectName,
+                subjectID: subjectID,
+              ),
+            ),
+          );
+        },
+        child: Align(
+            alignment: Alignment.center,
+            child: Text(
+              '+',
+              style: TextStyle(color: Colors.black),
+            )),
+        style: ButtonStyle(
+          elevation: MaterialStateProperty.all(0),
+          backgroundColor: MaterialStateProperty.all(Colors.white38),
+        ),
+      ),
+    ));
+
+    homeworks!.forEach((element) {
+      list.add(
+        SizedBox(
+          width: 5,
+        ),
+      );
+      list.add(
+        Container(
+          height: 40,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: Colors.white38,
+          ),
+          alignment: Alignment.center,
+          padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+          child: Text(element.name),
+        ),
+      );
+    });
+
+    return list;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +169,7 @@ class HomeWorkStripe extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: Theme.of(context).backgroundColor,
+            color: Colors.black,
           ),
           const SizedBox(
             width: 5,
@@ -119,8 +177,7 @@ class HomeWorkStripe extends StatelessWidget {
           Container(
             height: 20,
             decoration: BoxDecoration(
-                border: Border.all(
-                    color: Theme.of(context).backgroundColor, width: 1)),
+                border: Border.all(color: Colors.black, width: 1)),
           ),
           const SizedBox(
             width: 10,
@@ -128,29 +185,7 @@ class HomeWorkStripe extends StatelessWidget {
           Expanded(
             child: ListView(
               scrollDirection: Axis.horizontal,
-              children: [
-                Container(
-                  width: 40,
-                  height: 30,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => AddHomework(
-                            subjectname: subjectName,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Align(alignment: Alignment.center, child: Text('+')),
-                    style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(0),
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.white38),
-                    ),
-                  ),
-                ),
-              ],
+              children: _generateWidgets(context),
             ),
           )
         ],
