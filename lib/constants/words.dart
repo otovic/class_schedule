@@ -21,6 +21,7 @@ Map<String, String> subjectColor = {
   "en": "Subject color",
   "sr": "Боја предмета"
 };
+Map<String, String> addHomework = {"en": "Add Homework", "sr": "Додај домаћи"};
 Map<String, String> addSubject = {"en": "Add Subject", "sr": "Додај Предмет"};
 Map<String, String> subjectName = {"en": "Subject name", "sr": "Име предмета"};
 Map<String, String> subjectID = {"en": "Subject ID", "sr": "Шифра предмета"};
@@ -30,10 +31,19 @@ Map<String, String> subjectProfessor = {
 };
 Map<String, String> to = {"en": "to", "sr": "до"};
 Map<String, String> subjectClassroom = {"en": "Classroom", "sr": "Учионица"};
+Map<String, String> homeworkName = {
+  "en": "Homework name",
+  "sr": "Назив домаћег"
+};
+Map<String, String> homeworkDesc = {
+  "en": "Homework description",
+  "sr": "Опис домаћег"
+};
 Map<String, String> noClass = {
   "en": "No class on this day",
   "sr": "Нема часова овог дана"
 };
+Map<String, String> subject = {"en": "Subject", "sr": "Предмет"};
 Map<String, String> addClassT = {"en": "Add class", "sr": "Додај час"};
 Map<String, String> classTime = {"en": "Class Time", "sr": "Време часа"};
 Map<String, String> chooseLang = {

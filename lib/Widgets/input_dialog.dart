@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 class InputDialog extends StatelessWidget {
   final String placeholderText;
   final TextEditingController controller;
+  final int maxLines;
   const InputDialog(
-      {required this.placeholderText, required this.controller, Key? key})
+      {this.maxLines = 1,
+      required this.placeholderText,
+      required this.controller,
+      Key? key})
       : super(key: key);
 
   @override
@@ -12,7 +16,9 @@ class InputDialog extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          TextField(
+          TextFormField(
+            textAlign: TextAlign.start,
+            maxLines: maxLines,
             style: TextStyle(
               color: Theme.of(context).backgroundColor,
               fontWeight: FontWeight.bold,
@@ -26,6 +32,7 @@ class InputDialog extends StatelessWidget {
                 borderSide: BorderSide(width: 3, color: Colors.blueAccent),
               ),
               labelText: placeholderText,
+              alignLabelWithHint: true,
               labelStyle: TextStyle(color: Theme.of(context).backgroundColor),
             ),
             controller: controller,

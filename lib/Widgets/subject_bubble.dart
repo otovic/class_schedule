@@ -1,4 +1,5 @@
 import 'package:classschedule_app/Services/utility.dart';
+import 'package:classschedule_app/screens/add_homework.dart';
 import 'package:flutter/material.dart';
 
 import '../models/subject_model.dart';
@@ -44,6 +45,7 @@ class SubjectBubble extends StatelessWidget {
             ),
             HomeWorkStripe(
               icon: Icons.home_work_outlined,
+              subjectName: subject.nameOfSubject,
             )
           ],
         ),
@@ -95,7 +97,10 @@ class SubjectBubbleRow extends StatelessWidget {
 
 class HomeWorkStripe extends StatelessWidget {
   final IconData icon;
-  const HomeWorkStripe({required this.icon, Key? key}) : super(key: key);
+  final String subjectName;
+  const HomeWorkStripe(
+      {required this.icon, required this.subjectName, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +133,15 @@ class HomeWorkStripe extends StatelessWidget {
                   width: 40,
                   height: 30,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => AddHomework(
+                            subjectname: subjectName,
+                          ),
+                        ),
+                      );
+                    },
                     child: Align(alignment: Alignment.center, child: Text('+')),
                     style: ButtonStyle(
                       elevation: MaterialStateProperty.all(0),
