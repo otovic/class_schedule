@@ -174,6 +174,8 @@ class _AddHomeworkState extends State<AddHomework> {
                                     completed: false),
                               ),
                             );
+
+                            Navigator.of(context).pop();
                           },
                           child: Text(addWord[state.settings.langID]!),
                         ),

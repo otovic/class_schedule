@@ -6,5 +6,6 @@ Map<String, String> dbCreateQuery = {
   "class_schedule":
       "CREATE TABLE class_schedule (id INTEGER PRIMARY KEY, subjectID TEXT, subjectName TEXT, professor TEXT, classroom TEXT, color TEXT, week INTEGER, day INTEGER, startTime TEXT, endTime TEXT)",
   "homeworks":
-      "CREATE TABLE homeworks (id INTEGER PRIMARY KEY, subjectID TEXT, name TEXT, description TEXT, duedate TEXT, completed TEXT)"
+      "CREATE TABLE homeworks (id INTEGER PRIMARY KEY, subjectID TEXT, name TEXT, description TEXT, duedate TEXT, completed TEXT)",
+  "week": "CREATE TABLE week (id INTEGER PRIMARY KEY, week INTEGER)"
 };

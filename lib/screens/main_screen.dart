@@ -27,11 +27,13 @@ class MainScreen extends StatelessWidget {
     }
   }
 
-  List<Widget> _getWidgets(List<Subject> list) {
+  List<Widget> _getWidgets(List<Subject> list, int week, DateTime date) {
     List<Widget> widgets = [];
-
     for (var subject in list) {
-      widgets.add(SubjectBubble(subject: subject));
+      print("${subject.week} duzina");
+      if (subject.week == week && subject.day == date.weekday) {
+        widgets.add(SubjectBubble(subject: subject));
+      }
     }
 
     return widgets;
@@ -53,6 +55,17 @@ class MainScreen extends StatelessWidget {
         if (previous.subjects.length != current.subjects.length) {
           return true;
         }
+        if (previous.selectedWeek != current.selectedWeek) {
+          return true;
+        }
+
+        for (int i = 0; i < previous.subjects.length; i++) {
+          if (previous.subjects[i].homeworks.length !=
+              current.subjects[i].homeworks.length) {
+            return true;
+          }
+        }
+
         return false;
       },
       builder: (BuildContext context, ScheduleState schState) {
@@ -66,10 +79,6 @@ class MainScreen extends StatelessWidget {
               return true;
             }
             if (previous.settings.numOfWeeks != current.settings.numOfWeeks) {
-              return true;
-            }
-            if (previous.settings.selectedWeek !=
-                current.settings.selectedWeek) {
               return true;
             }
             return false;
@@ -139,7 +148,8 @@ class MainScreen extends StatelessWidget {
                     child: SingleChildScrollView(
                       child: Center(
                         child: Column(
-                          children: _getWidgets(schState.subjects),
+                          children: _getWidgets(schState.subjects,
+                              schState.selectedWeek, schState.currentDate),
                         ),
                       ),
                     ),

@@ -42,19 +42,20 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
             Settings.defaultValues, loadStatus.firstLoad));
         return;
       }
+
       emit(
         SettingsState.setValues(
-            Settings(
-              settingsRes[0]['settingValue'].toString(),
-              int.parse(settingsRes[1]['settingValue']),
-              settingsRes[3]['settingValue'],
-              int.parse(settingsRes[4]['settingValue']),
-            ),
-            loadStatus.loaded),
+          Settings(
+            settingsRes[0]['settingValue'].toString(),
+            int.parse(settingsRes[1]['settingValue']),
+            settingsRes[3]['settingValue'],
+          ),
+          loadStatus.loaded,
+        ),
       );
     } catch (error) {
       emit(SettingsState.setValues(
-          const Settings("en", 1, 'light', 1), loadStatus.error));
+          const Settings("en", 1, 'light'), loadStatus.error));
     }
   }
 
@@ -91,7 +92,7 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
     await DatabaseService.runInsertQuery(dbStatus[1], query);
 
     emit(SettingsState.setValues(
-        Settings(event.lang, 1, 'light', 1), loadStatus.loaded));
+        Settings(event.lang, 1, 'light'), loadStatus.loaded));
   }
 
   Future<void> _changeTheme(
@@ -109,10 +110,10 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
     emit(
       SettingsState.setValues(
           Settings(
-              state.settings.langID,
-              state.settings.numOfWeeks,
-              state.settings.theme == 'light' ? 'dark' : 'light',
-              state.settings.selectedWeek),
+            state.settings.langID,
+            state.settings.numOfWeeks,
+            state.settings.theme == 'light' ? 'dark' : 'light',
+          ),
           state.status),
     );
   }
@@ -130,8 +131,11 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
     await DatabaseService.runInsertQuery(dbStatus[1], query);
 
     emit(SettingsState.setValues(
-        Settings(event.language, state.settings.numOfWeeks,
-            state.settings.theme, state.settings.selectedWeek),
+        Settings(
+          event.language,
+          state.settings.numOfWeeks,
+          state.settings.theme,
+        ),
         state.status));
   }
 
@@ -153,7 +157,11 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
 
       emit(
         SettingsState.setValues(
-          Settings(state.settings.langID, 1, state.settings.theme, 1),
+          Settings(
+            state.settings.langID,
+            1,
+            state.settings.theme,
+          ),
           state.status,
         ),
       );
@@ -165,8 +173,11 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
 
       emit(
         SettingsState.setValues(
-          Settings(state.settings.langID, state.settings.numOfWeeks + 1,
-              state.settings.theme, state.settings.selectedWeek),
+          Settings(
+            state.settings.langID,
+            state.settings.numOfWeeks + 1,
+            state.settings.theme,
+          ),
           state.status,
         ),
       );
@@ -190,8 +201,11 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
           "UPDATE settings SET settingValue = '${event.newWeek}' WHERE id = 5");
 
       emit(SettingsState.setValues(
-          Settings(state.settings.langID, state.settings.numOfWeeks,
-              state.settings.theme, event.newWeek),
+          Settings(
+            state.settings.langID,
+            state.settings.numOfWeeks,
+            state.settings.theme,
+          ),
           state.status));
     } catch (error) {}
   }

@@ -202,6 +202,8 @@ class _AddSubjectState extends State<AddSubject> {
                           generateSubject(scheduleBloc.state),
                         ),
                       );
+
+                      Navigator.of(context).pop();
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.shortestSide * 0.6,

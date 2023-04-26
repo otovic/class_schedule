@@ -31,3 +31,8 @@ class AddNewHomework extends ScheduleEvent {
   final Homework homework;
   const AddNewHomework(this.homework);
 }
+
+class ChangeWeekNumber extends ScheduleEvent {
+  final int newWeek;
+  const ChangeWeekNumber(this.newWeek);
+}

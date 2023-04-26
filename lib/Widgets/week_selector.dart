@@ -51,11 +51,11 @@ class WeekSelector extends StatelessWidget {
             builder: (BuildContext context, ScheduleState schState) {
               return DropdownButton<String>(
                 underline: Container(),
-                value: weekMap[langID]?[state.settings.selectedWeek - 1],
+                value: weekMap[langID]?[schState.selectedWeek - 1],
                 items: _generateList(),
                 onChanged: (value) {
-                  settingsBloc.add(
-                    ChangeSelectedWeek(
+                  scheduleBloc.add(
+                    ChangeWeekNumber(
                       ((weekMap[langID]?.indexOf(value!))! + 1),
                     ),
                   );
