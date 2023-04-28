@@ -39,8 +39,3 @@ class ChangeLanguage extends SettingsEvents {
 class ChangeWeekNum extends SettingsEvents {
   const ChangeWeekNum();
 }
-
-class ChangeSelectedWeek extends SettingsEvents {
-  final int newWeek;
-  const ChangeSelectedWeek(this.newWeek);
-}

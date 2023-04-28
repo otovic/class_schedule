@@ -2,6 +2,7 @@ import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
 import 'package:classschedule_app/Blocs/SettingsBloc/settings_bloc.dart';
 import 'package:classschedule_app/Widgets/class_input_week.dart';
 import 'package:classschedule_app/Widgets/input_dialog.dart';
+import 'package:classschedule_app/Widgets/subject_list.dart';
 import 'package:classschedule_app/constants/words.dart';
 import 'package:classschedule_app/models/subject_model.dart';
 import 'package:classschedule_app/screens/color_picker.dart';
@@ -55,6 +56,14 @@ class _AddSubjectState extends State<AddSubject> {
     endTime = time;
   }
 
+  void _addExistingSubject(Subject s) {
+    idController.text = s.subjectID;
+    nameController.text = s.nameOfSubject;
+    professorController.text = s.professorName;
+    classroomController.text = s.classroom;
+    setCollor(s.color);
+  }
+
   @override
   Widget build(BuildContext context) {
     SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
@@ -74,6 +83,24 @@ class _AddSubjectState extends State<AddSubject> {
             iconTheme: settingsBloc.state.settings.theme == 'light'
                 ? iconThemeDark
                 : iconThemeLight,
+            actions: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      opaque: false,
+                      pageBuilder: (_, __, ___) =>
+                          SubjectList(exe: _addExistingSubject),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  child: Icon(Icons.add),
+                ),
+              )
+            ],
           ),
           body: Container(
             width: double.infinity,

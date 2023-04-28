@@ -36,3 +36,8 @@ class ChangeWeekNumber extends ScheduleEvent {
   final int newWeek;
   const ChangeWeekNumber(this.newWeek);
 }
+
+class ChangeSelectedWeek extends ScheduleEvent {
+  final int newWeek;
+  const ChangeSelectedWeek(this.newWeek);
+}

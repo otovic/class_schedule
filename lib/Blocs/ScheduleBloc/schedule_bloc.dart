@@ -11,13 +11,20 @@ part 'schedule_state.dart';
 
 class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
   ScheduleBloc()
-      : super(ScheduleState.init(
-            currentDate: DateTime.now(), selectedWeek: 1, subjects: [])) {
+      : super(
+          ScheduleState.init(
+            currentDate: DateTime.now(),
+            selectedWeek: 1,
+            numberOfWeeks: 1,
+            subjects: [],
+          ),
+        ) {
     on<ChangeDate>((event, emit) => _setNewDate(event, emit));
     on<InitSchedule>((event, emit) => _initSettings(event, emit));
     on<AddNewSubject>((event, emit) => _addSubject(event, emit));
     on<AddNewHomework>((event, emit) => _addNewHomework(event, emit));
-    on<ChangeWeekNumber>((event, emit) => _changeWeekNumber(event, emit));
+    on<ChangeWeekNumber>((event, emit) => _changeNumberOfWeeks(event, emit));
+    on<ChangeSelectedWeek>((event, emit) => _changeSelectedWeek(event, emit));
     add(InitSchedule());
   }
 
@@ -26,6 +33,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     emit(ScheduleState.init(
         currentDate: event.newDate,
         subjects: state.subjects,
+        numberOfWeeks: state.numberOfWeeks,
         selectedWeek: state.selectedWeek));
   }
 
@@ -75,6 +83,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       ScheduleState.init(
         currentDate: state.currentDate,
         selectedWeek: state.selectedWeek,
+        numberOfWeeks: state.numberOfWeeks,
         subjects: newList,
       ),
     );
@@ -92,36 +101,78 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       "INSERT INTO class_schedule (subjectID, subjectName, professor, classroom, color, week, day, startTime, endTime) VALUES ('${subject.subjectID}', '${subject.nameOfSubject}', '${subject.professorName}', '${subject.classroom}', '${UtilityService.encodeColor(subject.color)}', ${subject.week}, ${subject.day}, '${UtilityService.encodeTime(subject.startTime)}', '${UtilityService.encodeTime(subject.endTime)}')",
     );
 
+    List<dynamic> homeworkStatus =
+        await DatabaseService.initDatabase(path, "homeworks");
+
+    List<Map<dynamic, dynamic>> result = await DatabaseService.executeQuery(
+        homeworkStatus[1],
+        "SELECT * FROM homeworks WHERE subjectID = '${subject.subjectID}'");
+
     List<Subject> newList = [];
 
     for (var element in state.subjects) {
       newList.add(element);
     }
 
+    for (var homework in result) {
+      subject.homeworks.add(
+        Homework(
+          id: homework['subjectID'],
+          name: homework['name'],
+          description: homework['description'],
+          dueDate: DateService.decodeDate(homework['duedate']),
+          completed: UtilityService.decodeBool(homework['completed']),
+        ),
+      );
+    }
+
     newList.add(subject);
+
+    print(newList);
 
     emit(
       ScheduleState.init(
         currentDate: state.currentDate,
         selectedWeek: state.selectedWeek,
+        numberOfWeeks: state.numberOfWeeks,
         subjects: newList,
       ),
     );
   }
 
-  Future<void> _changeWeekNumber(
+  Future<void> _changeNumberOfWeeks(
       ChangeWeekNumber event, Emitter<ScheduleState> emit) async {
     String path = await DatabaseService.getStoragePath();
 
     List<dynamic> weekDb = await DatabaseService.initDatabase(path, "week");
 
     List<Map<dynamic, dynamic>> weekFetch = await DatabaseService.executeQuery(
-        weekDb[1], "INSERT INTO week (week) VALUES (${event.newWeek})");
+        weekDb[1], "UPDATE week SET week = ${event.newWeek} WHERE id = 1");
+
+    emit(
+      ScheduleState.init(
+        currentDate: state.currentDate,
+        selectedWeek: event.newWeek == 1 ? 1 : state.selectedWeek,
+        numberOfWeeks: event.newWeek,
+        subjects: state.subjects,
+      ),
+    );
+  }
+
+  Future<void> _changeSelectedWeek(
+      ChangeSelectedWeek event, Emitter<ScheduleState> emit) async {
+    String path = await DatabaseService.getStoragePath();
+
+    List<dynamic> weekDb = await DatabaseService.initDatabase(path, "week");
+
+    List<Map<dynamic, dynamic>> weekFetch = await DatabaseService.executeQuery(
+        weekDb[1], "UPDATE week SET week = ${event.newWeek} WHERE id = 0");
 
     emit(
       ScheduleState.init(
         currentDate: state.currentDate,
         selectedWeek: event.newWeek,
+        numberOfWeeks: state.numberOfWeeks,
         subjects: state.subjects,
       ),
     );
@@ -149,6 +200,15 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       List<Map<dynamic, dynamic>> weekFetch =
           await DatabaseService.executeQuery(weekDb[1], "SELECT * FROM week");
 
+      if (weekFetch.isEmpty) {
+        await DatabaseService.executeQuery(
+            weekDb[1], "INSERT INTO week (week) VALUES (1)");
+        await DatabaseService.executeQuery(
+            weekDb[1], "INSERT INTO week (week) VALUES (1)");
+        weekFetch.add({"week": 1});
+        weekFetch.add({"week": 1});
+      }
+
       List<Subject> newList = [];
 
       list.forEach((element) async {
@@ -166,9 +226,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           }
         });
 
-        print("${element['day']} dan");
-        print("${element['week']} nedelja");
-
         newList.add(
           Subject(
             subjectID: element['subjectID'],
@@ -185,12 +242,11 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         );
       });
 
-      print(weekFetch[0]['week']);
-
       emit(
         ScheduleState.init(
           currentDate: state.currentDate,
           selectedWeek: weekFetch[0]['week'],
+          numberOfWeeks: weekFetch[1]['week'],
           subjects: newList,
         ),
       );

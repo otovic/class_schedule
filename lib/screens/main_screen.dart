@@ -30,7 +30,6 @@ class MainScreen extends StatelessWidget {
   List<Widget> _getWidgets(List<Subject> list, int week, DateTime date) {
     List<Widget> widgets = [];
     for (var subject in list) {
-      print("${subject.week} duzina");
       if (subject.week == week && subject.day == date.weekday) {
         widgets.add(SubjectBubble(subject: subject));
       }
@@ -58,7 +57,9 @@ class MainScreen extends StatelessWidget {
         if (previous.selectedWeek != current.selectedWeek) {
           return true;
         }
-
+        if (previous.numberOfWeeks != current.numberOfWeeks) {
+          return true;
+        }
         for (int i = 0; i < previous.subjects.length; i++) {
           if (previous.subjects[i].homeworks.length !=
               current.subjects[i].homeworks.length) {
@@ -87,10 +88,10 @@ class MainScreen extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 elevation: 0,
-                actions: state.settings.numOfWeeks != 1
+                actions: schState.numberOfWeeks != 1
                     ? [
                         WeekSelector(
-                            state.settings.numOfWeeks, state.settings.langID)
+                            schState.numberOfWeeks, state.settings.langID)
                       ]
                     : [],
                 title: Text(

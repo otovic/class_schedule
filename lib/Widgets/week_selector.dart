@@ -2,8 +2,6 @@ import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../Blocs/SettingsBloc/settings_bloc.dart';
-
 final Map<String, List<String>> weekMap = {
   "en": ["Week 1", "Week 2", "Week 3", "Week 4"],
   "sr": ["Недеља 1", "Недеља 2", "Недеља 3", "Недеља 4"]
@@ -30,12 +28,11 @@ class WeekSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
     final ScheduleBloc scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
 
     return BlocBuilder(
-      bloc: settingsBloc,
-      builder: (BuildContext context, SettingsState state) {
+      bloc: scheduleBloc,
+      builder: (BuildContext context, ScheduleState state) {
         return Container(
           margin: const EdgeInsets.only(top: 5, right: 10),
           decoration: BoxDecoration(
@@ -55,7 +52,7 @@ class WeekSelector extends StatelessWidget {
                 items: _generateList(),
                 onChanged: (value) {
                   scheduleBloc.add(
-                    ChangeWeekNumber(
+                    ChangeSelectedWeek(
                       ((weekMap[langID]?.indexOf(value!))! + 1),
                     ),
                   );

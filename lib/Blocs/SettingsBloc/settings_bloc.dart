@@ -17,7 +17,6 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
     on<ChangeTheme>((event, emit) => _changeTheme(event, emit));
     on<ChangeLanguage>((event, emit) => _changeLanguage(event, emit));
     on<ChangeWeekNum>((event, emit) => _changeWeekNum(event, emit));
-    on<ChangeSelectedWeek>((event, emit) => _setNewWeek(event, emit));
     add(const InitSettings());
   }
 
@@ -187,26 +186,5 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
   Future<List<Map<dynamic, dynamic>>> _readSettings(
       Database db, String query) async {
     return await DatabaseService.executeQuery(db, query);
-  }
-
-  Future<void> _setNewWeek(
-      ChangeSelectedWeek event, Emitter<SettingsState> emit) async {
-    try {
-      String path = await DatabaseService.getStoragePath();
-
-      List<dynamic> dbStatus =
-          await DatabaseService.initDatabase(path, "settings");
-
-      await DatabaseService.runInsertQuery(dbStatus[1],
-          "UPDATE settings SET settingValue = '${event.newWeek}' WHERE id = 5");
-
-      emit(SettingsState.setValues(
-          Settings(
-            state.settings.langID,
-            state.settings.numOfWeeks,
-            state.settings.theme,
-          ),
-          state.status));
-    } catch (error) {}
   }
 }
