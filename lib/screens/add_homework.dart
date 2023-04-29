@@ -1,6 +1,6 @@
 import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
 import 'package:classschedule_app/constants/words.dart';
-import 'package:classschedule_app/models/homework.dart';
+import 'package:classschedule_app/models/homework_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

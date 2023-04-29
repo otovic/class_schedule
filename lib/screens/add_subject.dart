@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../constants/themes.dart';
-import '../models/homework.dart';
+import '../models/homework_model.dart';
 
 class AddSubject extends StatefulWidget {
   AddSubject({Key? key}) : super(key: key);
@@ -30,6 +30,7 @@ class _AddSubjectState extends State<AddSubject> {
 
   Subject generateSubject(ScheduleState state) {
     return Subject(
+        uniqueID: null,
         subjectID: idController.text,
         nameOfSubject: nameController.text,
         professorName: professorController.text,

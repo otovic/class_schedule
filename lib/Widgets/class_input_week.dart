@@ -5,13 +5,17 @@ import 'package:flutter/material.dart';
 import '../constants/words.dart';
 
 class ClassWeekInput extends StatefulWidget {
-  const ClassWeekInput(
+  ClassWeekInput(
       {required this.lang,
       required this.dayNum,
       required this.setStartTime,
       required this.setEndTime,
+      this.startTime = const TimeOfDay(hour: 00, minute: 00),
+      this.endTime = const TimeOfDay(hour: 00, minute: 00),
       Key? key})
       : super(key: key);
+  late TimeOfDay startTime;
+  late TimeOfDay endTime;
   final String lang;
   final int dayNum;
   final Function setStartTime;
@@ -19,13 +23,19 @@ class ClassWeekInput extends StatefulWidget {
 
   @override
   State<ClassWeekInput> createState() =>
-      _ClassWeekInputState(setStartTime, setEndTime);
+      _ClassWeekInputState(setStartTime, setEndTime,
+          startTime: startTime, endTime: endTime);
 }
 
 class _ClassWeekInputState extends State<ClassWeekInput> {
-  _ClassWeekInputState(this.setStartTime, this.setEndTime);
-  TimeOfDay startTime = const TimeOfDay(hour: 00, minute: 00);
-  TimeOfDay endTime = const TimeOfDay(hour: 00, minute: 00);
+  _ClassWeekInputState(this.setStartTime, this.setEndTime,
+      {this.startTime = const TimeOfDay(hour: 00, minute: 00),
+      this.endTime = const TimeOfDay(hour: 00, minute: 00)}) {
+    print(startTime);
+  }
+
+  TimeOfDay startTime;
+  TimeOfDay endTime;
   late final Function setStartTime;
   late final Function setEndTime;
 

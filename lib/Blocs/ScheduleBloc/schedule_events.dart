@@ -56,3 +56,14 @@ class MarkHomeworkComplete extends ScheduleEvent {
   final int homeworkID;
   const MarkHomeworkComplete(this.homeworkID);
 }
+
+class RemoveSubject extends ScheduleEvent {
+  final String id;
+  const RemoveSubject(this.id);
+}
+
+class ChangeSubject extends ScheduleEvent {
+  final String oldID;
+  final Subject subject;
+  const ChangeSubject(this.subject, this.oldID);
+}

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'homework.dart';
+import 'homework_model.dart';
 
 class Subject {
+  final int? uniqueID;
   final String subjectID;
   final String nameOfSubject;
   final String professorName;
@@ -15,7 +16,8 @@ class Subject {
   final List<Homework> homeworks;
 
   const Subject(
-      {required this.subjectID,
+      {required this.uniqueID,
+      required this.subjectID,
       required this.nameOfSubject,
       required this.professorName,
       required this.classroom,

@@ -1,10 +1,11 @@
 import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
 import 'package:classschedule_app/Blocs/SettingsBloc/settings_bloc.dart';
-import 'package:classschedule_app/models/homework.dart';
+import 'package:classschedule_app/models/homework_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../Widgets/input_dialog.dart';
+import '../constants/themes.dart';
 import '../constants/words.dart';
 
 class AlterHomework extends StatefulWidget {
@@ -48,7 +49,13 @@ class _AlterHomeworkState extends State<AlterHomework> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Theme.of(context).primaryColor,
-            title: Text(widget.homework.name),
+            title: Text(
+              widget.homework.name,
+              style: TextStyle(color: Theme.of(context).backgroundColor),
+            ),
+            iconTheme: settingsBloc.state.settings.theme == 'light'
+                ? iconThemeDark
+                : iconThemeLight,
           ),
           body: SingleChildScrollView(
             child: Container(

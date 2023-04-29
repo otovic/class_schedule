@@ -1,8 +1,9 @@
 import 'package:classschedule_app/Services/utility.dart';
 import 'package:classschedule_app/screens/add_homework.dart';
+import 'package:classschedule_app/screens/alter_subject.dart';
 import 'package:flutter/material.dart';
 
-import '../models/homework.dart';
+import '../models/homework_model.dart';
 import '../models/subject_model.dart';
 import '../screens/alter_homework.dart';
 
@@ -12,46 +13,57 @@ class SubjectBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(10),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(10),
-        ),
-        color: subject.color,
-      ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => AlterSubject(
+              subject: subject,
+            ),
+          ),
+        );
+      },
       child: Container(
-        margin: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            SubjectBubbleRow(
-              icon: Icons.timer_outlined,
-              text: UtilityService.generateTimeText(
-                  subject.startTime, subject.endTime),
-            ),
-            SubjectBubbleRow(
-              icon: Icons.subject_outlined,
-              text: subject.nameOfSubject,
-            ),
-            SubjectBubbleRow(
-              icon: Icons.person_2_outlined,
-              text: subject.professorName,
-            ),
-            SubjectBubbleRow(
-              icon: Icons.door_back_door_outlined,
-              text: subject.classroom,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            HomeWorkStripe(
-              icon: Icons.home_work_outlined,
-              subjectName: subject.nameOfSubject,
-              subjectID: subject.subjectID,
-              homeworks: subject.homeworks,
-            )
-          ],
+        margin: const EdgeInsets.all(10),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(10),
+          ),
+          color: subject.color,
+        ),
+        child: Container(
+          margin: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              SubjectBubbleRow(
+                icon: Icons.timer_outlined,
+                text: UtilityService.generateTimeText(
+                    subject.startTime, subject.endTime),
+              ),
+              SubjectBubbleRow(
+                icon: Icons.subject_outlined,
+                text: subject.nameOfSubject,
+              ),
+              SubjectBubbleRow(
+                icon: Icons.person_2_outlined,
+                text: subject.professorName,
+              ),
+              SubjectBubbleRow(
+                icon: Icons.door_back_door_outlined,
+                text: subject.classroom,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              HomeWorkStripe(
+                icon: Icons.home_work_outlined,
+                subjectName: subject.nameOfSubject,
+                subjectID: subject.subjectID,
+                homeworks: subject.homeworks,
+              )
+            ],
+          ),
         ),
       ),
     );

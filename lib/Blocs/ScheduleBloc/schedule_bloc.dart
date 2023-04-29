@@ -4,7 +4,7 @@ import 'package:classschedule_app/models/subject_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../Services/database_service.dart';
-import '../../models/homework.dart';
+import '../../models/homework_model.dart';
 
 part 'schedule_events.dart';
 part 'schedule_state.dart';
@@ -27,8 +27,51 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<ChangeSelectedWeek>((event, emit) => _changeSelectedWeek(event, emit));
     on<DeleteHomework>((event, emit) => _deleteHomework(event, emit));
     on<ChangeHomework>((event, emit) => _changeHomework(event, emit));
+    on<ChangeSubject>((event, emit) => _changeSubject(event, emit));
     on<MarkHomeworkComplete>(
         (event, emit) => _markHomeWorkComplete(event, emit));
+    on<RemoveSubject>((event, emit) => _removeSubject(event, emit));
+    add(InitSchedule());
+  }
+
+  Future<void> _changeSubject(
+      ChangeSubject event, Emitter<ScheduleState> emit) async {
+    try {
+      String path = await DatabaseService.getStoragePath();
+
+      List<dynamic> subjectDb = await DatabaseService.initDatabase(
+        path,
+        "class_schedule",
+      );
+
+      await DatabaseService.executeQuery(
+        subjectDb[1],
+        "UPDATE class_schedule SET subjectID = '${event.subject.subjectID}', subjectName = '${event.subject.nameOfSubject}', professor = '${event.subject.professorName}', classroom = '${event.subject.classroom}', color = '${UtilityService.encodeColor(event.subject.color)}', week = ${event.subject.week}, day = ${event.subject.day}, startTime = '${UtilityService.encodeTime(event.subject.startTime)}', endTime = '${UtilityService.encodeTime(event.subject.endTime)}' WHERE id = ${event.subject.uniqueID}",
+      );
+
+      await DatabaseService.executeQuery(
+        subjectDb[1],
+        "UPDATE class_schedule SET subjectID = '${event.subject.subjectID}', subjectName = '${event.subject.nameOfSubject}', color = '${UtilityService.encodeColor(event.subject.color)}' WHERE subjectID = '${event.oldID}'",
+      );
+
+      add(InitSchedule());
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _removeSubject(
+      RemoveSubject event, Emitter<ScheduleState> emit) async {
+    String path = await DatabaseService.getStoragePath();
+
+    List<dynamic> homeworkDb = await DatabaseService.initDatabase(
+      path,
+      "class_schedule",
+    );
+
+    await DatabaseService.executeQuery(homeworkDb[1],
+        "DELETE FROM class_schedule WHERE subjectID = '${event.id}'");
+
     add(InitSchedule());
   }
 
@@ -122,6 +165,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
       newList.add(
         Subject(
+          uniqueID: element.uniqueID,
           subjectID: element.subjectID,
           nameOfSubject: element.nameOfSubject,
           professorName: element.professorName,
@@ -295,6 +339,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
         newList.add(
           Subject(
+            uniqueID: element['id'],
             subjectID: element['subjectID'],
             nameOfSubject: element['subjectName'],
             professorName: element['professor'],
