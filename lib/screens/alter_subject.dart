@@ -243,8 +243,9 @@ class _AlterSubjectState extends State<AlterSubject> {
                           backgroundColor: Colors.red,
                         ),
                         onPressed: () {
+                          print(subject.uniqueID);
                           scheduleBloc.add(
-                            RemoveSubject(subject.subjectID),
+                            RemoveSubject(subject.uniqueID),
                           );
 
                           Navigator.of(context).pop();

@@ -5,6 +5,7 @@ import 'package:classschedule_app/Screens/choose_language.dart';
 import 'package:classschedule_app/Screens/settings.dart';
 import 'package:classschedule_app/Widgets/day_selector_banner.dart';
 import 'package:classschedule_app/Widgets/week_selector.dart';
+import 'package:classschedule_app/constants/words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -27,8 +28,13 @@ class MainScreen extends StatelessWidget {
     }
   }
 
-  List<Widget> _getWidgets(List<Subject> list, int week, DateTime date) {
+  List<Widget> _generateWidgets(
+    List<Subject> list,
+    int week,
+    DateTime date,
+  ) {
     List<Widget> widgets = [];
+
     for (var subject in list) {
       if (subject.week == week && subject.day == date.weekday) {
         widgets.add(SubjectBubble(subject: subject));
@@ -36,6 +42,30 @@ class MainScreen extends StatelessWidget {
     }
 
     return widgets;
+  }
+
+  Widget _getWidgets(List<Subject> list, int week, DateTime date,
+      BuildContext context, String langID) {
+    List<Widget> newList = _generateWidgets(list, week, date);
+
+    if (newList.isEmpty) {
+      return Center(
+        child: Text(
+          noClass[langID]!,
+          style: TextStyle(
+              color: Theme.of(context).backgroundColor,
+              fontWeight: FontWeight.bold),
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          children: newList,
+        ),
+      ),
+    );
   }
 
   @override
@@ -61,15 +91,8 @@ class MainScreen extends StatelessWidget {
           return true;
         }
         for (int i = 0; i < previous.subjects.length; i++) {
-          if (previous.subjects[i].homeworks.length !=
-              current.subjects[i].homeworks.length) {
+          if (previous.subjects[i] != current.subjects[i]) {
             return true;
-          }
-          for (int j = 0; j < previous.subjects[i].homeworks.length; i++) {
-            if (previous.subjects[i].homeworks[j] !=
-                current.subjects[i].homeworks[j]) {
-              return true;
-            }
           }
         }
 
@@ -152,14 +175,8 @@ class MainScreen extends StatelessWidget {
                 children: [
                   DaySelectorBanner(),
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Center(
-                        child: Column(
-                          children: _getWidgets(schState.subjects,
-                              schState.selectedWeek, schState.currentDate),
-                        ),
-                      ),
-                    ),
+                    child: _getWidgets(schState.subjects, schState.selectedWeek,
+                        schState.currentDate, context, state.settings.langID),
                   ),
                 ],
               ),

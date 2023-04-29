@@ -69,8 +69,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       "class_schedule",
     );
 
-    await DatabaseService.executeQuery(homeworkDb[1],
-        "DELETE FROM class_schedule WHERE subjectID = '${event.id}'");
+    await DatabaseService.executeQuery(
+        homeworkDb[1], "DELETE FROM class_schedule WHERE id = ${event.id}");
 
     add(InitSchedule());
   }
@@ -206,6 +206,10 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       "INSERT INTO class_schedule (subjectID, subjectName, professor, classroom, color, week, day, startTime, endTime) VALUES ('${subject.subjectID}', '${subject.nameOfSubject}', '${subject.professorName}', '${subject.classroom}', '${UtilityService.encodeColor(subject.color)}', ${subject.week}, ${subject.day}, '${UtilityService.encodeTime(subject.startTime)}', '${UtilityService.encodeTime(subject.endTime)}')",
     );
 
+    List<Map<dynamic, dynamic>> newID = await DatabaseService.executeQuery(
+        dbStatus[1],
+        "SELECT * FROM class_schedule WHERE subjectID = '${subject.subjectID}'");
+
     List<dynamic> homeworkStatus =
         await DatabaseService.initDatabase(path, "homeworks");
 
@@ -232,7 +236,20 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       );
     }
 
-    newList.add(subject);
+    newList.add(
+      Subject(
+          uniqueID: newID.last['id'],
+          subjectID: subject.subjectID,
+          nameOfSubject: subject.nameOfSubject,
+          professorName: subject.professorName,
+          classroom: subject.classroom,
+          color: subject.color,
+          day: subject.day,
+          week: subject.week,
+          startTime: subject.startTime,
+          endTime: subject.endTime,
+          homeworks: subject.homeworks),
+    );
 
     emit(
       ScheduleState.init(
@@ -250,17 +267,21 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
     List<dynamic> weekDb = await DatabaseService.initDatabase(path, "week");
 
-    List<Map<dynamic, dynamic>> weekFetch = await DatabaseService.executeQuery(
-        weekDb[1], "UPDATE week SET week = ${event.newWeek} WHERE id = 1");
+    await DatabaseService.executeQuery(
+        weekDb[1], "UPDATE week SET week = ${event.newWeek} WHERE id = 2");
 
-    emit(
-      ScheduleState.init(
-        currentDate: state.currentDate,
-        selectedWeek: event.newWeek == 1 ? 1 : state.selectedWeek,
-        numberOfWeeks: event.newWeek,
-        subjects: state.subjects,
-      ),
-    );
+    if (event.newWeek == 1) {
+      print(event.newWeek);
+      List<dynamic> homeworkDb = await DatabaseService.initDatabase(
+        path,
+        "class_schedule",
+      );
+
+      await DatabaseService.executeQuery(
+          homeworkDb[1], "DELETE FROM class_schedule WHERE week > 1");
+    }
+
+    add(InitSchedule());
   }
 
   Future<void> _changeSelectedWeek(
@@ -270,7 +291,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     List<dynamic> weekDb = await DatabaseService.initDatabase(path, "week");
 
     List<Map<dynamic, dynamic>> weekFetch = await DatabaseService.executeQuery(
-        weekDb[1], "UPDATE week SET week = ${event.newWeek} WHERE id = 0");
+        weekDb[1], "UPDATE week SET week = ${event.newWeek} WHERE id = 1");
 
     emit(
       ScheduleState.init(
@@ -353,6 +374,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           ),
         );
       });
+
+      print(weekFetch);
 
       emit(
         ScheduleState.init(

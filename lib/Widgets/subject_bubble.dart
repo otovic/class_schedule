@@ -15,6 +15,7 @@ class SubjectBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print(subject.uniqueID);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => AlterSubject(

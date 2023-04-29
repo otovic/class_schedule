@@ -58,7 +58,7 @@ class MarkHomeworkComplete extends ScheduleEvent {
 }
 
 class RemoveSubject extends ScheduleEvent {
-  final String id;
+  final int? id;
   const RemoveSubject(this.id);
 }
 
