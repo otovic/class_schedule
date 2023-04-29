@@ -41,3 +41,18 @@ class ChangeSelectedWeek extends ScheduleEvent {
   final int newWeek;
   const ChangeSelectedWeek(this.newWeek);
 }
+
+class DeleteHomework extends ScheduleEvent {
+  final int homeworkID;
+  const DeleteHomework(this.homeworkID);
+}
+
+class ChangeHomework extends ScheduleEvent {
+  final Homework homework;
+  const ChangeHomework(this.homework);
+}
+
+class MarkHomeworkComplete extends ScheduleEvent {
+  final int homeworkID;
+  const MarkHomeworkComplete(this.homeworkID);
+}

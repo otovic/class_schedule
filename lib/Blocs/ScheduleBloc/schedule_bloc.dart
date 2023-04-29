@@ -25,6 +25,55 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<AddNewHomework>((event, emit) => _addNewHomework(event, emit));
     on<ChangeWeekNumber>((event, emit) => _changeNumberOfWeeks(event, emit));
     on<ChangeSelectedWeek>((event, emit) => _changeSelectedWeek(event, emit));
+    on<DeleteHomework>((event, emit) => _deleteHomework(event, emit));
+    on<ChangeHomework>((event, emit) => _changeHomework(event, emit));
+    on<MarkHomeworkComplete>(
+        (event, emit) => _markHomeWorkComplete(event, emit));
+    add(InitSchedule());
+  }
+
+  Future<void> _markHomeWorkComplete(
+      MarkHomeworkComplete event, Emitter<ScheduleState> emit) async {
+    String path = await DatabaseService.getStoragePath();
+
+    List<dynamic> homeworkDb = await DatabaseService.initDatabase(
+      path,
+      "homeworks",
+    );
+
+    await DatabaseService.executeQuery(homeworkDb[1],
+        "UPDATE homeworks SET completed = '${UtilityService.encodeBool(true)}' WHERE id = ${event.homeworkID}");
+
+    add(InitSchedule());
+  }
+
+  Future<void> _changeHomework(
+      ChangeHomework event, Emitter<ScheduleState> emit) async {
+    String path = await DatabaseService.getStoragePath();
+
+    List<dynamic> homeworkDb = await DatabaseService.initDatabase(
+      path,
+      "homeworks",
+    );
+
+    await DatabaseService.executeQuery(
+      homeworkDb[1],
+      "UPDATE homeworks SET subjectID = '${event.homework.id}', name = '${event.homework.name}', description = '${event.homework.description}', duedate = '${DateService.encodeDate(event.homework.dueDate)}', completed = '${UtilityService.encodeBool(event.homework.completed)}' WHERE id = ${event.homework.uniqueID}",
+    );
+
+    add(InitSchedule());
+  }
+
+  Future<void> _deleteHomework(
+      DeleteHomework event, Emitter<ScheduleState> emit) async {
+    String path = await DatabaseService.getStoragePath();
+
+    List<dynamic> homeworkDb =
+        await DatabaseService.initDatabase(path, "homeworks");
+
+    await DatabaseService.executeQuery(
+        homeworkDb[1], "DELETE FROM homeworks WHERE id = ${event.homeworkID}");
+
     add(InitSchedule());
   }
 
@@ -48,6 +97,18 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     await DatabaseService.runInsertQuery(
       homeworkDb[1],
       "INSERT INTO homeworks (subjectID, name, description, dueDate, completed) VALUES ('${homework.id}', '${homework.name}', '${homework.description}', '${DateService.encodeDate(homework.dueDate)})', '${UtilityService.encodeBool(homework.completed)}')",
+    );
+
+    List<Map<dynamic, dynamic>> homeworkID = await DatabaseService.executeQuery(
+        homeworkDb[1], "SELECT * FROM homeworks");
+
+    homework = Homework(
+      uniqueID: homeworkID.last['id'],
+      id: homework.id,
+      name: homework.name,
+      description: homework.description,
+      dueDate: homework.dueDate,
+      completed: homework.completed,
     );
 
     List<Subject> newList = [];
@@ -75,7 +136,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       );
 
       if (newList.last.subjectID == event.homework.id) {
-        newList.last.homeworks.add(event.homework);
+        newList.last.homeworks.add(homework);
       }
     }
 
@@ -117,6 +178,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     for (var homework in result) {
       subject.homeworks.add(
         Homework(
+          uniqueID: homework['id'],
           id: homework['subjectID'],
           name: homework['name'],
           description: homework['description'],
@@ -127,8 +189,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     }
 
     newList.add(subject);
-
-    print(newList);
 
     emit(
       ScheduleState.init(
@@ -214,17 +274,24 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       list.forEach((element) async {
         List<Homework> homeworksList = [];
 
-        homeworkFetch.forEach((homeworkItem) {
-          if (homeworkItem['subjectID'] == element['subjectID']) {
-            homeworksList.add(Homework(
-              id: homeworkItem['subjectID'],
-              name: homeworkItem['name'],
-              description: homeworkItem['description'],
-              dueDate: DateService.decodeDate(homeworkItem['duedate']),
-              completed: UtilityService.decodeBool(homeworkItem['completed']),
-            ));
-          }
-        });
+        homeworkFetch.forEach(
+          (homeworkItem) {
+            print(homeworkItem);
+            if (homeworkItem['subjectID'] == element['subjectID']) {
+              homeworksList.add(
+                Homework(
+                  uniqueID: homeworkItem['id'],
+                  id: homeworkItem['subjectID'],
+                  name: homeworkItem['name'],
+                  description: homeworkItem['description'],
+                  dueDate: DateService.decodeDate(homeworkItem['duedate']),
+                  completed:
+                      UtilityService.decodeBool(homeworkItem['completed']),
+                ),
+              );
+            }
+          },
+        );
 
         newList.add(
           Subject(

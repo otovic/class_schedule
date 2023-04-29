@@ -43,11 +43,14 @@ Map<String, String> homeworkName = {
   "en": "Homework name",
   "sr": "Назив домаћег"
 };
+Map<String, String> markAsDone = {"en": "Completed", "sr": "Урађено"};
+Map<String, String> remove = {"en": "Remove", "sr": "Избриши"};
 Map<String, String> addWord = {"en": "Add", "sr": "Додај"};
 Map<String, String> homeworkDesc = {
   "en": "Homework description",
   "sr": "Опис домаћег"
 };
+Map<String, String> changeData = {"en": "Apply changes", "sr": "Промени"};
 Map<String, String> noClass = {
   "en": "No class on this day",
   "sr": "Нема часова овог дана"

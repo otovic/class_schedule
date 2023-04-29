@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/homework.dart';
 import '../models/subject_model.dart';
+import '../screens/alter_homework.dart';
 
 class SubjectBubble extends StatelessWidget {
   final Subject subject;
@@ -111,51 +112,70 @@ class HomeWorkStripe extends StatelessWidget {
   List<Widget> _generateWidgets(BuildContext context) {
     List<Widget> list = [];
 
-    list.add(Container(
-      width: 40,
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => AddHomework(
-                subjectname: subjectName,
-                subjectID: subjectID,
+    list.add(
+      Container(
+        width: 40,
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => AddHomework(
+                  subjectname: subjectName,
+                  subjectID: subjectID,
+                ),
+              ),
+            );
+          },
+          child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                '+',
+                style: TextStyle(color: Colors.black),
+              )),
+          style: ButtonStyle(
+            elevation: MaterialStateProperty.all(0),
+            backgroundColor: MaterialStateProperty.all(Colors.white38),
+          ),
+        ),
+      ),
+    );
+
+    homeworks!.forEach(
+      (element) {
+        if (element.completed == false) {
+          list.add(
+            SizedBox(
+              width: 5,
+            ),
+          );
+          list.add(
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => AlterHomework(
+                      homework: element,
+                      subjectID: subjectID,
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.white38,
+                ),
+                alignment: Alignment.center,
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                child: Text(element.name),
               ),
             ),
           );
-        },
-        child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              '+',
-              style: TextStyle(color: Colors.black),
-            )),
-        style: ButtonStyle(
-          elevation: MaterialStateProperty.all(0),
-          backgroundColor: MaterialStateProperty.all(Colors.white38),
-        ),
-      ),
-    ));
-
-    homeworks!.forEach((element) {
-      list.add(
-        SizedBox(
-          width: 5,
-        ),
-      );
-      list.add(
-        Container(
-          height: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: Colors.white38,
-          ),
-          alignment: Alignment.center,
-          padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-          child: Text(element.name),
-        ),
-      );
-    });
+        }
+      },
+    );
 
     return list;
   }

@@ -167,6 +167,7 @@ class _AddHomeworkState extends State<AddHomework> {
                             scheduleBloc.add(
                               AddNewHomework(
                                 Homework(
+                                    uniqueID: null,
                                     id: subjectId,
                                     name: name.text,
                                     description: description.text,

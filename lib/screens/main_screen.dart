@@ -65,6 +65,12 @@ class MainScreen extends StatelessWidget {
               current.subjects[i].homeworks.length) {
             return true;
           }
+          for (int j = 0; j < previous.subjects[i].homeworks.length; i++) {
+            if (previous.subjects[i].homeworks[j] !=
+                current.subjects[i].homeworks[j]) {
+              return true;
+            }
+          }
         }
 
         return false;
