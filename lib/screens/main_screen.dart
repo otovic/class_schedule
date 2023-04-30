@@ -1,19 +1,21 @@
 import 'dart:async';
 
-import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
-import 'package:classschedule_app/Screens/choose_language.dart';
-import 'package:classschedule_app/Screens/settings.dart';
-import 'package:classschedule_app/Widgets/day_selector_banner.dart';
-import 'package:classschedule_app/Widgets/week_selector.dart';
+import 'package:classschedule_app/screens/notifications.dart';
+import 'package:classschedule_app/services/utility.dart';
+import 'package:classschedule_app/blocs/schedule_bloc/schedule_bloc.dart';
+import 'package:classschedule_app/screens/choose_language.dart';
+import 'package:classschedule_app/screens/settings.dart';
+import 'package:classschedule_app/widgets/day_selector_banner.dart';
+import 'package:classschedule_app/widgets/week_selector.dart';
 import 'package:classschedule_app/constants/words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-import '../Blocs/SettingsBloc/settings_bloc.dart';
-import '../Screens/add_subject.dart';
-import '../Services/date_service.dart';
-import '../Widgets/subject_bubble.dart';
+import '../blocs/settings_bloc/settings_bloc.dart';
+import '../screens/add_subject.dart';
+import '../services/date_service.dart';
+import '../widgets/subject_bubble.dart';
 import '../models/subject_model.dart';
 
 class MainScreen extends StatelessWidget {
@@ -35,10 +37,25 @@ class MainScreen extends StatelessWidget {
   ) {
     List<Widget> widgets = [];
 
+    List<List<dynamic>> orderList = [];
+
     for (var subject in list) {
       if (subject.week == week && subject.day == date.weekday) {
-        widgets.add(SubjectBubble(subject: subject));
+        orderList.add(
+          [
+            UtilityService.addTimeOfDay(
+                    subject.startTime, const TimeOfDay(hour: 0, minute: 0)) *
+                -1,
+            SubjectBubble(subject: subject)
+          ],
+        );
       }
+    }
+
+    orderList.sort((a, b) => a[0].compareTo(b[0]));
+
+    for (var element in orderList) {
+      widgets.add(element[1]);
     }
 
     return widgets;
@@ -147,17 +164,11 @@ class MainScreen extends StatelessWidget {
                     CircularIcon(
                       icon: Icons.notifications_outlined,
                       onTapFunc: () {
-                        var _productIdList = {
-                          'product1',
-                          'product2',
-                          'product3'
-                        };
-
-                        final InAppPurchase _inAppPurchase =
-                            InAppPurchase.instance;
-                        late StreamSubscription<List<PurchaseDetails>>
-                            _subscription;
-                        List<ProductDetails> _products = <ProductDetails>[];
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => NotificationsScreen(),
+                          ),
+                        );
                       },
                     ),
                     CircularIcon(

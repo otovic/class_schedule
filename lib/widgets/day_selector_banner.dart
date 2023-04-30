@@ -1,9 +1,9 @@
-import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
+import 'package:classschedule_app/blocs/schedule_bloc/schedule_bloc.dart';
 import 'package:classschedule_app/Widgets/week_day_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../Blocs/SettingsBloc/settings_bloc.dart';
+import '../blocs/settings_bloc/settings_bloc.dart';
 
 class DaySelectorBanner extends StatelessWidget {
   DaySelectorBanner({Key? key}) : super(key: key);

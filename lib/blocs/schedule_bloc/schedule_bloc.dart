@@ -1,8 +1,13 @@
 import 'package:classschedule_app/Services/date_service.dart';
 import 'package:classschedule_app/Services/utility.dart';
+import 'package:classschedule_app/constants/words.dart';
 import 'package:classschedule_app/models/subject_model.dart';
+import 'package:classschedule_app/services/notifications_service.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import '../../Services/database_service.dart';
 import '../../models/homework_model.dart';
 
@@ -109,15 +114,24 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
   Future<void> _deleteHomework(
       DeleteHomework event, Emitter<ScheduleState> emit) async {
-    String path = await DatabaseService.getStoragePath();
+    try {
+      String path = await DatabaseService.getStoragePath();
 
-    List<dynamic> homeworkDb =
-        await DatabaseService.initDatabase(path, "homeworks");
+      List<dynamic> homeworkDb =
+          await DatabaseService.initDatabase(path, "homeworks");
 
-    await DatabaseService.executeQuery(
-        homeworkDb[1], "DELETE FROM homeworks WHERE id = ${event.homeworkID}");
+      await DatabaseService.executeQuery(homeworkDb[1],
+          "DELETE FROM homeworks WHERE id = ${event.homeworkID}");
 
-    add(InitSchedule());
+      final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+          FlutterLocalNotificationsPlugin();
+
+      await flutterLocalNotificationsPlugin.cancel(event.homeworkID);
+
+      add(InitSchedule());
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 
   Future<void> _setNewDate(
@@ -155,6 +169,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     );
 
     List<Subject> newList = [];
+    late Subject? chosen;
 
     for (var element in state.subjects) {
       List<Homework> copy = [];
@@ -181,8 +196,39 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
       if (newList.last.subjectID == event.homework.id) {
         newList.last.homeworks.add(homework);
+        chosen = newList.last;
       }
     }
+
+    WidgetsFlutterBinding.ensureInitialized();
+    await NotificationService().init();
+
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      "noti_channel_title",
+      "noti_channel_desc",
+      importance: Importance.defaultImportance,
+      priority: Priority.defaultPriority,
+    );
+
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    // await flutterLocalNotificationsPlugin.show(
+    //     12, "p", "p", platformChannelSpecifics);
+    // tz.initializeTimeZones();
+
+    await flutterLocalNotificationsPlugin.schedule(
+        homework.uniqueID as int,
+        "${chosen != null ? chosen.nameOfSubject : "Homework"}",
+        "${homeworkTomorow[event.lang]}",
+        homework.dueDate.subtract(Duration(hours: 8)),
+        const NotificationDetails(
+            android: AndroidNotificationDetails("a", "a")),
+        androidAllowWhileIdle: true);
 
     emit(
       ScheduleState.init(
@@ -279,6 +325,9 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
       await DatabaseService.executeQuery(
           homeworkDb[1], "DELETE FROM class_schedule WHERE week > 1");
+
+      await DatabaseService.executeQuery(
+          weekDb[1], "UPDATE week SET week = ${event.newWeek} WHERE id = 1");
     }
 
     add(InitSchedule());
@@ -336,46 +385,45 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
       List<Subject> newList = [];
 
-      list.forEach((element) async {
-        List<Homework> homeworksList = [];
+      list.forEach(
+        (element) async {
+          List<Homework> homeworksList = [];
 
-        homeworkFetch.forEach(
-          (homeworkItem) {
-            print(homeworkItem);
-            if (homeworkItem['subjectID'] == element['subjectID']) {
-              homeworksList.add(
-                Homework(
-                  uniqueID: homeworkItem['id'],
-                  id: homeworkItem['subjectID'],
-                  name: homeworkItem['name'],
-                  description: homeworkItem['description'],
-                  dueDate: DateService.decodeDate(homeworkItem['duedate']),
-                  completed:
-                      UtilityService.decodeBool(homeworkItem['completed']),
-                ),
-              );
-            }
-          },
-        );
+          homeworkFetch.forEach(
+            (homeworkItem) {
+              if (homeworkItem['subjectID'] == element['subjectID']) {
+                homeworksList.add(
+                  Homework(
+                    uniqueID: homeworkItem['id'],
+                    id: homeworkItem['subjectID'],
+                    name: homeworkItem['name'],
+                    description: homeworkItem['description'],
+                    dueDate: DateService.decodeDate(homeworkItem['duedate']),
+                    completed:
+                        UtilityService.decodeBool(homeworkItem['completed']),
+                  ),
+                );
+              }
+            },
+          );
 
-        newList.add(
-          Subject(
-            uniqueID: element['id'],
-            subjectID: element['subjectID'],
-            nameOfSubject: element['subjectName'],
-            professorName: element['professor'],
-            classroom: element['classroom'],
-            color: UtilityService.decodeColor(element['color']),
-            day: element['day'],
-            week: element['week'],
-            startTime: UtilityService.decodeTime(element['startTime']),
-            endTime: UtilityService.decodeTime(element['endTime']),
-            homeworks: homeworksList,
-          ),
-        );
-      });
-
-      print(weekFetch);
+          newList.add(
+            Subject(
+              uniqueID: element['id'],
+              subjectID: element['subjectID'],
+              nameOfSubject: element['subjectName'],
+              professorName: element['professor'],
+              classroom: element['classroom'],
+              color: UtilityService.decodeColor(element['color']),
+              day: element['day'],
+              week: element['week'],
+              startTime: UtilityService.decodeTime(element['startTime']),
+              endTime: UtilityService.decodeTime(element['endTime']),
+              homeworks: homeworksList,
+            ),
+          );
+        },
+      );
 
       emit(
         ScheduleState.init(

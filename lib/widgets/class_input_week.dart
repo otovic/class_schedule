@@ -50,7 +50,9 @@ class _ClassWeekInputState extends State<ClassWeekInput> {
           Container(
             child: Text(
               "${DateService.getWeekDayFromNum(widget.dayNum, widget.lang)!}:",
-              style: TextStyle(color: Theme.of(context).backgroundColor),
+              style: TextStyle(
+                color: Theme.of(context).backgroundColor,
+              ),
             ),
           ),
           Container(
@@ -75,21 +77,21 @@ class _ClassWeekInputState extends State<ClassWeekInput> {
                   Text(
                     UtilityService.formatTime(startTime.hour),
                     style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.shortestSide * 0.07,
+                      fontSize: MediaQuery.of(context).size.shortestSide * 0.06,
                       color: Theme.of(context).backgroundColor,
                     ),
                   ),
                   Text(
                     ":",
                     style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.shortestSide * 0.07,
+                      fontSize: MediaQuery.of(context).size.shortestSide * 0.06,
                       color: Theme.of(context).backgroundColor,
                     ),
                   ),
                   Text(
                     UtilityService.formatTime(startTime.minute),
                     style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.shortestSide * 0.07,
+                      fontSize: MediaQuery.of(context).size.shortestSide * 0.06,
                       color: Theme.of(context).backgroundColor,
                     ),
                   )
@@ -98,17 +100,17 @@ class _ClassWeekInputState extends State<ClassWeekInput> {
             ),
           ),
           Container(
-            width: MediaQuery.of(context).size.shortestSide * 0.08,
+            width: MediaQuery.of(context).size.shortestSide * 0.07,
             height: 50,
             alignment: Alignment.center,
             child: Text(
               to[widget.lang]!,
               style: TextStyle(
-                  fontSize: 18, color: Theme.of(context).backgroundColor),
+                  fontSize: 14, color: Theme.of(context).backgroundColor),
             ),
           ),
           Container(
-            width: MediaQuery.of(context).size.shortestSide * 0.3,
+            width: MediaQuery.of(context).size.shortestSide * 0.25,
             height: 50,
             child: GestureDetector(
               onTap: () async {
@@ -129,21 +131,21 @@ class _ClassWeekInputState extends State<ClassWeekInput> {
                   Text(
                     UtilityService.formatTime(endTime.hour),
                     style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.shortestSide * 0.07,
+                      fontSize: MediaQuery.of(context).size.shortestSide * 0.06,
                       color: Theme.of(context).backgroundColor,
                     ),
                   ),
                   Text(
                     ":",
                     style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.shortestSide * 0.07,
+                      fontSize: MediaQuery.of(context).size.shortestSide * 0.06,
                       color: Theme.of(context).backgroundColor,
                     ),
                   ),
                   Text(
                     UtilityService.formatTime(endTime.minute),
                     style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.shortestSide * 0.07,
+                      fontSize: MediaQuery.of(context).size.shortestSide * 0.06,
                       color: Theme.of(context).backgroundColor,
                     ),
                   )

@@ -1,17 +1,13 @@
-import 'package:classschedule_app/Widgets/country_flag.dart';
+import 'package:classschedule_app/widgets/country_flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../Blocs/SettingsBloc/settings_bloc.dart';
+import '../blocs/settings_bloc/settings_bloc.dart';
 import '../constants/themes.dart';
 import '../constants/words.dart';
 
 class ChooseLanguage extends StatelessWidget {
   const ChooseLanguage({super.key});
-
-  static Route<void> route() {
-    return MaterialPageRoute<void>(builder: (_) => const ChooseLanguage());
-  }
 
   @override
   Widget build(BuildContext context) {

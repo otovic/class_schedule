@@ -55,6 +55,22 @@ Map<String, String> noClass = {
   "en": "No class on this day",
   "sr": "Нема часова овог дана"
 };
+Map<String, String> homeworkTomorow = {
+  "en": "You have homework due tomorrow",
+  "sr": "Имате домаћи задатак за сутра"
+};
+Map<String, String> fillId = {
+  "en": "Subject ID and subject name field can't be empty",
+  "sr": "Поље за шифру и име предмета не могу бити празни"
+};
+Map<String, String> notifications = {
+  "en": "Notifications",
+  "sr": "Нотификације"
+};
+Map<String, String> correctTime = {
+  "en": "Choose a valid time",
+  "sr": "Изаберите исправно време"
+};
 Map<String, String> dueDate = {"en": "Due date", "sr": "Рок"};
 Map<String, String> subject = {"en": "Subject", "sr": "Предмет"};
 Map<String, String> addClassT = {"en": "Add class", "sr": "Додај час"};

@@ -1,5 +1,5 @@
-import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
-import 'package:classschedule_app/Blocs/SettingsBloc/settings_bloc.dart';
+import 'package:classschedule_app/blocs/schedule_bloc/schedule_bloc.dart';
+import 'package:classschedule_app/blocs/settings_bloc/settings_bloc.dart';
 import 'package:classschedule_app/Widgets/class_input_week.dart';
 import 'package:classschedule_app/Widgets/input_dialog.dart';
 import 'package:classschedule_app/Widgets/subject_list.dart';
@@ -65,6 +65,31 @@ class _AddSubjectState extends State<AddSubject> {
     setCollor(s.color);
   }
 
+  List<Widget> _checkIfSubjectLenghtIsValid(ScheduleState state) {
+    if (state.subjects.length > 0) {
+      return [
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                opaque: false,
+                pageBuilder: (_, __, ___) =>
+                    SubjectList(exe: _addExistingSubject),
+              ),
+            );
+          },
+          child: Container(
+            width: 50,
+            height: 50,
+            child: Icon(Icons.add),
+          ),
+        )
+      ];
+    }
+
+    return <Widget>[];
+  }
+
   @override
   Widget build(BuildContext context) {
     SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
@@ -84,24 +109,7 @@ class _AddSubjectState extends State<AddSubject> {
             iconTheme: settingsBloc.state.settings.theme == 'light'
                 ? iconThemeDark
                 : iconThemeLight,
-            actions: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    PageRouteBuilder(
-                      opaque: false,
-                      pageBuilder: (_, __, ___) =>
-                          SubjectList(exe: _addExistingSubject),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  child: Icon(Icons.add),
-                ),
-              )
-            ],
+            actions: _checkIfSubjectLenghtIsValid(scheduleBloc.state),
           ),
           body: Container(
             width: double.infinity,
@@ -223,22 +231,43 @@ class _AddSubjectState extends State<AddSubject> {
                   const SizedBox(
                     height: 20,
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      scheduleBloc.add(
-                        AddNewSubject(
-                          generateSubject(scheduleBloc.state),
+                  Container(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        print((((startTime.hour + startTime.minute) / 60) -
+                            ((endTime.hour + endTime.minute) / 60)));
+                        if (idController.text == "" ||
+                            nameController.text == "") {
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          var snackBar = SnackBar(
+                            content: Text(fillId[state.settings.langID]!),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (endTime.hour < startTime.hour ||
+                            (endTime.hour == startTime.hour &&
+                                endTime.minute == startTime.minute)) {
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          var snackBar = SnackBar(
+                            content: Text(correctTime[state.settings.langID]!),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else {
+                          scheduleBloc.add(
+                            AddNewSubject(
+                              generateSubject(scheduleBloc.state),
+                            ),
+                          );
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.shortestSide * 0.6,
+                        height: 50,
+                        child: Center(
+                          child: Text(
+                              addClassT[settingsBloc.state.settings.langID]!),
                         ),
-                      );
-
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.shortestSide * 0.6,
-                      height: 50,
-                      child: Center(
-                        child: Text(
-                            addClassT[settingsBloc.state.settings.langID]!),
                       ),
                     ),
                   ),

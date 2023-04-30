@@ -11,6 +11,60 @@ class SubjectBubble extends StatelessWidget {
   final Subject subject;
   const SubjectBubble({required this.subject, Key? key}) : super(key: key);
 
+  List<Widget> _generateBubbleData(Subject subject) {
+    List<Widget> dataList = [];
+
+    dataList.add(
+      SubjectBubbleRow(
+        icon: Icons.timer_outlined,
+        text:
+            UtilityService.generateTimeText(subject.startTime, subject.endTime),
+      ),
+    );
+
+    dataList.add(
+      SubjectBubbleRow(
+        icon: Icons.subject_outlined,
+        text: subject.nameOfSubject,
+      ),
+    );
+
+    if (subject.professorName != "") {
+      dataList.add(
+        SubjectBubbleRow(
+          icon: Icons.person_2_outlined,
+          text: subject.professorName,
+        ),
+      );
+    }
+
+    if (subject.classroom != "") {
+      dataList.add(
+        SubjectBubbleRow(
+          icon: Icons.door_back_door_outlined,
+          text: subject.classroom,
+        ),
+      );
+    }
+
+    dataList.add(
+      SizedBox(
+        height: 20,
+      ),
+    );
+
+    dataList.add(
+      HomeWorkStripe(
+        icon: Icons.home_work_outlined,
+        subjectName: subject.nameOfSubject,
+        subjectID: subject.subjectID,
+        homeworks: subject.homeworks,
+      ),
+    );
+
+    return dataList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -36,34 +90,7 @@ class SubjectBubble extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.all(20),
           child: Column(
-            children: [
-              SubjectBubbleRow(
-                icon: Icons.timer_outlined,
-                text: UtilityService.generateTimeText(
-                    subject.startTime, subject.endTime),
-              ),
-              SubjectBubbleRow(
-                icon: Icons.subject_outlined,
-                text: subject.nameOfSubject,
-              ),
-              SubjectBubbleRow(
-                icon: Icons.person_2_outlined,
-                text: subject.professorName,
-              ),
-              SubjectBubbleRow(
-                icon: Icons.door_back_door_outlined,
-                text: subject.classroom,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              HomeWorkStripe(
-                icon: Icons.home_work_outlined,
-                subjectName: subject.nameOfSubject,
-                subjectID: subject.subjectID,
-                homeworks: subject.homeworks,
-              )
-            ],
+            children: _generateBubbleData(subject),
           ),
         ),
       ),

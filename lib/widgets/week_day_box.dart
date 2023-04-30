@@ -1,5 +1,5 @@
-import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
-import 'package:classschedule_app/Blocs/SettingsBloc/settings_bloc.dart';
+import 'package:classschedule_app/blocs/schedule_bloc/schedule_bloc.dart';
+import 'package:classschedule_app/blocs/settings_bloc/settings_bloc.dart';
 import 'package:classschedule_app/Services/date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,5 +1,5 @@
-import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
-import 'package:classschedule_app/Blocs/SettingsBloc/settings_bloc.dart';
+import 'package:classschedule_app/blocs/schedule_bloc/schedule_bloc.dart';
+import 'package:classschedule_app/blocs/settings_bloc/settings_bloc.dart';
 import 'package:classschedule_app/models/subject_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,6 +89,9 @@ class _AlterSubjectState extends State<AlterSubject> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      SizedBox(
+                        height: 10,
+                      ),
                       InputDialog(
                         placeholderText: "${subjectID[state.settings.langID]!}",
                         controller: idController,

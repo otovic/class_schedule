@@ -1,4 +1,4 @@
-import 'package:classschedule_app/Blocs/SettingsBloc/settings_bloc.dart';
+import 'package:classschedule_app/blocs/settings_bloc/settings_bloc.dart';
 import 'package:classschedule_app/Screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

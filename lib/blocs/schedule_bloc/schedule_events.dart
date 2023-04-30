@@ -29,7 +29,8 @@ class AddNewSubject extends ScheduleEvent {
 
 class AddNewHomework extends ScheduleEvent {
   final Homework homework;
-  const AddNewHomework(this.homework);
+  final String lang;
+  const AddNewHomework(this.homework, this.lang);
 }
 
 class ChangeWeekNumber extends ScheduleEvent {

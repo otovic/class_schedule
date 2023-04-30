@@ -1,10 +1,10 @@
-import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
+import 'package:classschedule_app/blocs/schedule_bloc/schedule_bloc.dart';
 import 'package:classschedule_app/constants/words.dart';
 import 'package:classschedule_app/models/homework_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../Blocs/SettingsBloc/settings_bloc.dart';
+import '../blocs/settings_bloc/settings_bloc.dart';
 import '../Widgets/input_dialog.dart';
 import '../constants/themes.dart';
 
@@ -167,12 +167,14 @@ class _AddHomeworkState extends State<AddHomework> {
                             scheduleBloc.add(
                               AddNewHomework(
                                 Homework(
-                                    uniqueID: null,
-                                    id: subjectId,
-                                    name: name.text,
-                                    description: description.text,
-                                    dueDate: date,
-                                    completed: false),
+                                  uniqueID: null,
+                                  id: subjectId,
+                                  name: name.text,
+                                  description: description.text,
+                                  dueDate: date,
+                                  completed: false,
+                                ),
+                                state.settings.langID,
                               ),
                             );
 

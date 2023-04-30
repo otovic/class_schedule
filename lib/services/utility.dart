@@ -61,4 +61,11 @@ class UtilityService {
   static bool decodeBool(String value) {
     return value == "1" ? true : false;
   }
+
+  static double addTimeOfDay(TimeOfDay t1, TimeOfDay t2) {
+    double parsedT1 = (t1.hour + t1.minute) / 60;
+    double parsedT2 = (t2.hour + t2.minute) / 60;
+
+    return parsedT2 - parsedT1;
+  }
 }

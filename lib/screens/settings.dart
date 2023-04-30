@@ -1,6 +1,6 @@
-import 'package:classschedule_app/Blocs/ScheduleBloc/schedule_bloc.dart';
-import 'package:classschedule_app/Screens/choose_language.dart';
-import 'package:classschedule_app/Widgets/option_selector.dart';
+import 'package:classschedule_app/blocs/schedule_bloc/schedule_bloc.dart';
+import 'package:classschedule_app/screens/choose_language.dart';
+import 'package:classschedule_app/widgets/option_selector.dart';
 import 'package:classschedule_app/constants/themes.dart';
 import 'package:classschedule_app/constants/words.dart';
 import 'package:classschedule_app/screens/donators.dart';
@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../Blocs/SettingsBloc/settings_bloc.dart';
-import '../Services/utility.dart';
+import '../blocs/settings_bloc/settings_bloc.dart';
+import '../services/utility.dart';
 import 'donations.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -17,9 +17,9 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    OverlayEntry? entry;
     final settingsBloc = BlocProvider.of<SettingsBloc>(context);
     final scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
+
     return BlocBuilder(
         bloc: scheduleBloc,
         builder: (BuildContext context, ScheduleState schState) {
@@ -69,8 +69,11 @@ class SettingsScreen extends StatelessWidget {
                         OptionSelector(
                           icon: Icons.language_outlined,
                           function: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const ChooseLanguage()));
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const ChooseLanguage(),
+                              ),
+                            );
                           },
                           title: language[settingsBloc.state.settings.langID]!,
                           value:
@@ -129,15 +132,5 @@ class SettingsScreen extends StatelessWidget {
             },
           );
         });
-  }
-}
-
-_launchURL() async {
-  const url = 'https://github.com/petarotovic/class_schedule';
-  final uri = Uri.parse(url);
-  if (await canLaunchUrl(uri)) {
-    await launchUrl(uri);
-  } else {
-    throw 'Could not launch $url';
   }
 }
