@@ -8,6 +8,10 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../constants/themes.dart';
 import '../constants/words.dart';
+import 'package:in_app_purchase_android/billing_client_wrappers.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 
 class Donations extends StatefulWidget {
   const Donations({Key? key}) : super(key: key);
@@ -80,7 +84,8 @@ class _DonationsState extends State<Donations> {
     final PurchaseParam purchaseParam =
         PurchaseParam(productDetails: productDetails);
 
-    InAppPurchase.instance.buyConsumable(purchaseParam: purchaseParam);
+    InAppPurchase.instance
+        .buyConsumable(purchaseParam: purchaseParam, autoConsume: true);
   }
 
   @override

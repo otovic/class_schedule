@@ -85,6 +85,7 @@ class SubjectBubble extends StatelessWidget {
           borderRadius: const BorderRadius.all(
             Radius.circular(10),
           ),
+          border: Border.all(color: Colors.black),
           color: subject.color,
         ),
         child: Container(

@@ -59,14 +59,23 @@ Map<String, String> homeworkTomorow = {
   "en": "You have homework due tomorrow",
   "sr": "Имате домаћи задатак за сутра"
 };
+Map<String, String> today = {"en": "Today", "sr": "Данас"};
+Map<String, String> tomorrow = {"en": "Tomorrow", "sr": "Сутра"};
 Map<String, String> fillId = {
   "en": "Subject ID and subject name field can't be empty",
   "sr": "Поље за шифру и име предмета не могу бити празни"
 };
+Map<String, String> Completed = {"en": "Completed", "sr": "Завршено"};
 Map<String, String> notifications = {
   "en": "Notifications",
   "sr": "Нотификације"
 };
+Map<String, String> expired = {"en": "Past due", "sr": "Истекло"};
+Map<String, String> duein = {
+  "en": "Due in |n| day/s",
+  "sr": "Рок за |n| дан/а"
+};
+
 Map<String, String> correctTime = {
   "en": "Choose a valid time",
   "sr": "Изаберите исправно време"

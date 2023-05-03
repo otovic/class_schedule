@@ -31,6 +31,14 @@ class DateService {
   }
 
   static String? getWeekDayFromNum(int num, String lang) {
+    if (num == DateTime.now().weekday) {
+      return today[lang];
+    }
+
+    if (num == DateTime.now().weekday + 1) {
+      return tomorrow[lang];
+    }
+
     switch (num) {
       case 1:
         return monday[lang];
