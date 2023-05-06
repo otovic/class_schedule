@@ -13,12 +13,12 @@ import '../constants/words.dart';
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({Key? key}) : super(key: key);
 
-  List<Widget> generateHomeworks(
-      BuildContext context, SettingsState settings, ScheduleState state) {
+  Widget generateHomeworks(
+      BuildContext context, SettingsState settings, ScheduleBloc schedule) {
     Map<int, List<Widget>> widgetMap = {};
     List<String> iterated = [];
 
-    for (Subject subject in state.subjects) {
+    for (Subject subject in schedule.state.subjects) {
       DateTime date = DateTime.now();
 
       if (!iterated.contains(subject.nameOfSubject)) {
@@ -26,7 +26,6 @@ class NotificationsScreen extends StatelessWidget {
         for (Homework homework in subject.homeworks) {
           if (homework.completed == false) {
             if (homework.dueDate.difference(date).inSeconds > 0) {
-              print(homework.name);
               int difference = homework.dueDate.difference(date).inDays;
               if (!widgetMap.containsKey(difference)) {
                 widgetMap[difference] = <Widget>[
@@ -44,16 +43,37 @@ class NotificationsScreen extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-                  HomeworkBubble(
-                    subject: subject,
-                    homework: homework,
+                  Dismissible(
+                    background: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                      ),
+                    ),
+                    child: HomeworkBubble(
+                      subject: subject,
+                      homework: homework,
+                    ),
+                    key: ValueKey(homework.uniqueID),
+                    onDismissed: (_) {
+                      schedule.add(DeleteHomework(homework.uniqueID as int));
+                    },
                   )
                 ];
               } else {
                 widgetMap.update(difference, (value) {
-                  value.add(
-                    HomeworkBubble(subject: subject, homework: homework),
-                  );
+                  value.add(Dismissible(
+                    background: Container(
+                      color: Colors.red,
+                    ),
+                    child: HomeworkBubble(
+                      subject: subject,
+                      homework: homework,
+                    ),
+                    key: ValueKey(homework.uniqueID),
+                    onDismissed: (_) {
+                      schedule.add(DeleteHomework(homework.uniqueID as int));
+                    },
+                  ));
 
                   return value;
                 });
@@ -74,12 +94,35 @@ class NotificationsScreen extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-                  HomeworkBubble(subject: subject, homework: homework),
+                  Dismissible(
+                    background: Container(
+                      color: Colors.red,
+                    ),
+                    child: HomeworkBubble(
+                      subject: subject,
+                      homework: homework,
+                    ),
+                    key: ValueKey(homework.uniqueID),
+                    onDismissed: (_) {
+                      schedule.add(DeleteHomework(homework.uniqueID as int));
+                    },
+                  )
                 ];
               } else {
                 widgetMap.update(-1, (value) {
-                  value.add(
-                      HomeworkBubble(subject: subject, homework: homework));
+                  value.add(Dismissible(
+                    background: Container(
+                      color: Colors.red,
+                    ),
+                    child: HomeworkBubble(
+                      subject: subject,
+                      homework: homework,
+                    ),
+                    key: ValueKey(homework.uniqueID),
+                    onDismissed: (_) {
+                      schedule.add(DeleteHomework(homework.uniqueID as int));
+                    },
+                  ));
                   return value;
                 });
               }
@@ -97,11 +140,35 @@ class NotificationsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                HomeworkBubble(subject: subject, homework: homework)
+                Dismissible(
+                  background: Container(
+                    color: Colors.red,
+                  ),
+                  child: HomeworkBubble(
+                    subject: subject,
+                    homework: homework,
+                  ),
+                  key: ValueKey(homework.uniqueID),
+                  onDismissed: (_) {
+                    schedule.add(DeleteHomework(homework.uniqueID as int));
+                  },
+                )
               ];
             } else {
               widgetMap.update(-2, (value) {
-                value.add(HomeworkBubble(subject: subject, homework: homework));
+                value.add(Dismissible(
+                  background: Container(
+                    color: Colors.red,
+                  ),
+                  child: HomeworkBubble(
+                    subject: subject,
+                    homework: homework,
+                  ),
+                  key: ValueKey(homework.uniqueID),
+                  onDismissed: (_) {
+                    schedule.add(DeleteHomework(homework.uniqueID as int));
+                  },
+                ));
                 return value;
               });
             }
@@ -121,13 +188,7 @@ class NotificationsScreen extends StatelessWidget {
     sortedKeys.sort();
 
     for (int i = 0; i < sortedKeys.length; i++) {
-      if (sortedKeys[i] > 0) {
-        finalList.add(
-          const SizedBox(
-            height: 10,
-          ),
-        );
-
+      if (sortedKeys[i] >= 0) {
         widgetMap[sortedKeys[i]]?.forEach(
           (element) {
             finalList.add(element);
@@ -160,7 +221,25 @@ class NotificationsScreen extends StatelessWidget {
       });
     });
 
-    return finalList;
+    if (finalList.length == 0) {
+      return Center(
+        child: Text(
+          noHomeworks[settings.settings.langID]!,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Theme.of(context).backgroundColor),
+        ),
+      );
+    }
+
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: finalList,
+        ),
+      ),
+    );
   }
 
   @override
@@ -185,15 +264,7 @@ class NotificationsScreen extends StatelessWidget {
                     ? iconThemeDark
                     : iconThemeLight,
               ),
-              body: Container(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: generateHomeworks(context, settings, schedule),
-                  ),
-                ),
-              ),
+              body: generateHomeworks(context, settings, scheduleBloc),
             );
           },
         );

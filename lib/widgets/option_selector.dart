@@ -57,14 +57,17 @@ class OptionSelector extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     height: MediaQuery.of(context).size.shortestSide * 0.05,
-                    child: Text(
-                      value,
-                      style: TextStyle(
-                        color: Theme.of(context).backgroundColor,
-                        fontSize:
-                            MediaQuery.of(context).size.shortestSide * 0.04,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                          color: Theme.of(context).backgroundColor,
+                          fontSize:
+                              MediaQuery.of(context).size.shortestSide * 0.04,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
                     ),
                   )
                 ],

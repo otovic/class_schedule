@@ -59,6 +59,27 @@ class DateService {
     }
   }
 
+  static String? getWeekDayName(int num, String lang) {
+    switch (num) {
+      case 1:
+        return monday[lang];
+      case 2:
+        return tuesday[lang];
+      case 3:
+        return wednesday[lang];
+      case 4:
+        return thursday[lang];
+      case 5:
+        return friday[lang];
+      case 6:
+        return saturday[lang];
+      case 7:
+        return sunday[lang];
+      default:
+        return "Monday";
+    }
+  }
+
   static String? getMonthFromNum(int num, String lang) {
     switch (num) {
       case 1:

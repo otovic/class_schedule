@@ -50,7 +50,9 @@ class DeleteHomework extends ScheduleEvent {
 
 class ChangeHomework extends ScheduleEvent {
   final Homework homework;
-  const ChangeHomework(this.homework);
+  final Subject subject;
+  final String langID;
+  const ChangeHomework(this.homework, this.subject, this.langID);
 }
 
 class MarkHomeworkComplete extends ScheduleEvent {

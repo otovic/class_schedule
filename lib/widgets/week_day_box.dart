@@ -72,7 +72,7 @@ class WeekDayBox extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              DateService.getWeekDayFromNum(date.weekday,
+                              DateService.getWeekDayName(date.weekday,
                                       settingsState.settings.langID)
                                   .toString()
                                   .substring(0, 3),

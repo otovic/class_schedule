@@ -98,7 +98,7 @@ class _AddHomeworkState extends State<AddHomework> {
                         color: Colors.white12,
                         padding: EdgeInsets.all(10),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               "${dueDate[state.settings.langID]!}:",
@@ -106,9 +106,6 @@ class _AddHomeworkState extends State<AddHomework> {
                                 color: Theme.of(context).backgroundColor,
                                 fontWeight: FontWeight.bold,
                               ),
-                            ),
-                            const SizedBox(
-                              width: 20,
                             ),
                             GestureDetector(
                               onTap: () async {
@@ -126,7 +123,7 @@ class _AddHomeworkState extends State<AddHomework> {
                               child: Container(
                                 width:
                                     MediaQuery.of(context).size.shortestSide *
-                                        0.6,
+                                        0.5,
                                 height: 50,
                                 alignment: Alignment.center,
                                 child: Text(

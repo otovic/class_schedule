@@ -52,28 +52,33 @@ class HomeworkBubbleRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.shortestSide * 1,
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: Colors.black,
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          Container(
-            height: 20,
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 1)),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Text(
-            text,
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ],
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: Colors.black,
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            Container(
+              height: 20,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black, width: 1)),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              text,
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -8,6 +8,16 @@ class UtilityService {
         return "English";
       case "sr":
         return "Српски";
+      case "de":
+        return "Deutsch";
+      case "fr":
+        return "Français";
+      case "ru":
+        return "Русский";
+      case "it":
+        return "Italiano";
+      case "es":
+        return "Español";
     }
   }
 

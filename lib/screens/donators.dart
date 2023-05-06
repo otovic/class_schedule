@@ -1,9 +1,11 @@
+import 'package:classschedule_app/Services/utility.dart';
 import 'package:classschedule_app/blocs/settings_bloc/settings_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../constants/themes.dart';
 import '../constants/words.dart';
+import 'package:http/http.dart' as http;
 
 class Donators extends StatelessWidget {
   const Donators({Key? key}) : super(key: key);

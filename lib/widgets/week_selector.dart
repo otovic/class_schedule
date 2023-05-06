@@ -4,7 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 final Map<String, List<String>> weekMap = {
   "en": ["Week 1", "Week 2", "Week 3", "Week 4"],
-  "sr": ["Недеља 1", "Недеља 2", "Недеља 3", "Недеља 4"]
+  "sr": ["Недеља 1", "Недеља 2", "Недеља 3", "Недеља 4"],
+  "gr": ["Woche 1", "Woche 2", "Woche 3", "Woche 4"],
+  "fr": ["Semaine 1", "Semaine 2", "Semaine 3", "Semaine 4"],
+  "es": ["Semana 1", "Semana 2", "Semana 3", "Semana 4"],
+  "it": ["Settimana 1", "Settimana 2", "Settimana 3", "Settimana 4"],
+  "ru": ["Неделя 1", "Неделя 2", "Неделя 3", "Неделя 4"],
 };
 
 class WeekSelector extends StatelessWidget {

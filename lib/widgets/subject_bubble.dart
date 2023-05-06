@@ -56,8 +56,7 @@ class SubjectBubble extends StatelessWidget {
     dataList.add(
       HomeWorkStripe(
         icon: Icons.home_work_outlined,
-        subjectName: subject.nameOfSubject,
-        subjectID: subject.subjectID,
+        subject: subject,
         homeworks: subject.homeworks,
       ),
     );
@@ -108,30 +107,35 @@ class SubjectBubbleRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.shortestSide * 1,
+      width: double.infinity,
       height: 30,
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: Colors.black,
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          Container(
-            height: 20,
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 1)),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Text(
-            text,
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ],
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: Colors.black,
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            Container(
+              height: 20,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black, width: 1)),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              text,
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -139,13 +143,11 @@ class SubjectBubbleRow extends StatelessWidget {
 
 class HomeWorkStripe extends StatelessWidget {
   final IconData icon;
-  final String subjectName;
-  final String subjectID;
+  final Subject subject;
   final List<Homework>? homeworks;
   const HomeWorkStripe(
       {required this.icon,
-      required this.subjectName,
-      required this.subjectID,
+      required this.subject,
       required this.homeworks,
       Key? key})
       : super(key: key);
@@ -161,8 +163,8 @@ class HomeWorkStripe extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => AddHomework(
-                  subjectname: subjectName,
-                  subjectID: subjectID,
+                  subjectname: subject.nameOfSubject,
+                  subjectID: subject.subjectID,
                 ),
               ),
             );
@@ -196,7 +198,7 @@ class HomeWorkStripe extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (_) => AlterHomework(
                       homework: element,
-                      subjectID: subjectID,
+                      subject: subject,
                     ),
                   ),
                 );

@@ -89,6 +89,14 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       "homeworks",
     );
 
+    WidgetsFlutterBinding.ensureInitialized();
+    await NotificationService().init();
+
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    await flutterLocalNotificationsPlugin.cancel(event.homeworkID);
+
     await DatabaseService.executeQuery(homeworkDb[1],
         "UPDATE homeworks SET completed = '${UtilityService.encodeBool(true)}' WHERE id = ${event.homeworkID}");
 
@@ -108,6 +116,33 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       homeworkDb[1],
       "UPDATE homeworks SET subjectID = '${event.homework.id}', name = '${event.homework.name}', description = '${event.homework.description}', duedate = '${DateService.encodeDate(event.homework.dueDate)}', completed = '${UtilityService.encodeBool(event.homework.completed)}' WHERE id = ${event.homework.uniqueID}",
     );
+    WidgetsFlutterBinding.ensureInitialized();
+    await NotificationService().init();
+
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      "noti_channel_title",
+      "noti_channel_desc",
+      importance: Importance.defaultImportance,
+      priority: Priority.defaultPriority,
+    );
+
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    await flutterLocalNotificationsPlugin
+        .cancel(event.homework.uniqueID as int);
+
+    print(event.homework.dueDate.subtract(Duration(hours: 8)));
+
+    await flutterLocalNotificationsPlugin.schedule(
+        event.homework.uniqueID as int,
+        "${event.subject.nameOfSubject}",
+        "${homeworkTomorow[event.langID]}",
+        event.homework.dueDate.subtract(Duration(hours: 8)),
+        const NotificationDetails(
+            android: AndroidNotificationDetails("a", "a")),
+        androidAllowWhileIdle: true);
 
     add(InitSchedule());
   }
@@ -115,6 +150,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
   Future<void> _deleteHomework(
       DeleteHomework event, Emitter<ScheduleState> emit) async {
     try {
+      print(event.homeworkID);
       String path = await DatabaseService.getStoragePath();
 
       List<dynamic> homeworkDb =

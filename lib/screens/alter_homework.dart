@@ -7,25 +7,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../Widgets/input_dialog.dart';
 import '../constants/themes.dart';
 import '../constants/words.dart';
+import '../models/subject_model.dart';
 
 class AlterHomework extends StatefulWidget {
   final Homework homework;
-  final String subjectID;
-  const AlterHomework(
-      {required this.homework, required this.subjectID, Key? key})
+  final Subject subject;
+  const AlterHomework({required this.homework, required this.subject, Key? key})
       : super(key: key);
 
   @override
-  State<AlterHomework> createState() =>
-      _AlterHomeworkState(homework, subjectID);
+  State<AlterHomework> createState() => _AlterHomeworkState(homework, subject);
 }
 
 class _AlterHomeworkState extends State<AlterHomework> {
   Homework homework;
-  String subjectID;
+  Subject subject;
   late DateTime date;
 
-  _AlterHomeworkState(this.homework, this.subjectID) {
+  _AlterHomeworkState(this.homework, this.subject) {
     date = homework.dueDate;
     _setValues();
   }
@@ -82,50 +81,50 @@ class _AlterHomeworkState extends State<AlterHomework> {
                     width: double.infinity,
                     height: 50,
                     color: Colors.white12,
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${dueDate[state.settings.langID]!}:",
-                          style: TextStyle(
-                            color: Theme.of(context).backgroundColor,
-                            fontWeight: FontWeight.bold,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${dueDate[state.settings.langID]!}:",
+                            style: TextStyle(
+                              color: Theme.of(context).backgroundColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            final DateTime? picked = await showDatePicker(
-                              context: context,
-                              initialDate: date,
-                              firstDate: DateTime(2022),
-                              lastDate: DateTime(2030),
-                            );
+                          GestureDetector(
+                            onTap: () async {
+                              final DateTime? picked = await showDatePicker(
+                                context: context,
+                                initialDate: date,
+                                firstDate: DateTime(2022),
+                                lastDate: DateTime(2030),
+                              );
 
-                            setState(() {
-                              date = picked!;
-                            });
-                          },
-                          child: Container(
-                            width:
-                                MediaQuery.of(context).size.shortestSide * 0.6,
-                            height: 50,
-                            alignment: Alignment.center,
-                            child: Text(
-                              "${date.day} - ${date.month} - ${date.year}",
-                              style: TextStyle(
-                                color: Theme.of(context).backgroundColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize:
-                                    MediaQuery.of(context).textScaleFactor * 20,
+                              setState(() {
+                                date = picked!;
+                              });
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.shortestSide *
+                                  0.6,
+                              height: 50,
+                              alignment: Alignment.center,
+                              child: Text(
+                                "${date.day} - ${date.month} - ${date.year}",
+                                style: TextStyle(
+                                  color: Theme.of(context).backgroundColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize:
+                                      MediaQuery.of(context).textScaleFactor *
+                                          20,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -144,6 +143,8 @@ class _AlterHomeworkState extends State<AlterHomework> {
                                 description: descriptionController.text,
                                 dueDate: date,
                                 completed: homework.completed),
+                            subject,
+                            state.settings.langID,
                           ),
                         );
                         Navigator.of(context).pop();

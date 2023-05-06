@@ -66,10 +66,10 @@ class ChooseLanguage extends StatelessWidget {
                                   "Français", "fr"),
                               CountryFlag("assets/country_flags/sp.png",
                                   "Español", "es"),
-                              CountryFlag(
-                                  "assets/country_flags/ar.png", "عربي", "ar"),
-                              CountryFlag(
-                                  "assets/country_flags/in.png", "अरबी", "in"),
+                              CountryFlag("assets/country_flags/it.png",
+                                  "Italiano", "it"),
+                              CountryFlag("assets/country_flags/ru.png",
+                                  "Русский", "ru"),
                             ],
                           ),
                         ),
