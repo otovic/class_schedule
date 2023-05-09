@@ -12,23 +12,24 @@ official IAP package for implementing in app purchases and for notifications i u
 
 #The app
 
-##Main Screen
+#Main Screen
+
 On the main screen you can switch between days of the week and it will show you classes you have for that day. You also have the
 option to add multiple weeks, so if you have schedule that changes every other week you can set that up too.
 
 [<img align="bottom" alt="Visual Studio Code" width="300px" src="gitassets/sc1.png" style="padding-right:10px;" />]()
 
 
-##Dark Mode
+#Dark Mode
 [<img align="bottom" alt="Visual Studio Code" width="300px" src="gitassets/sc2.png" style="padding-right:10px;" />]()
 
-##Notifications Screen
+#Notifications Screen
 
 On this screen you have an overview of your upcoming homeworks. You will also receive notifications the day before due date to alert you of your unfinished homework.
 
 [<img align="bottom" alt="Visual Studio Code" width="300px" src="gitassets/sc3.png" style="padding-right:10px;" />]()
 
-##Localization
+#Localization
 
 I also added 7 different languages you can choose and it changes in real time you don't have to restart the app to apply changes.
 
