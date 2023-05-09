@@ -19,14 +19,14 @@ option to add multiple weeks, so if you have schedule that changes every other w
 
 
 #Dark Mode
-[<img align="left" alt="Visual Studio Code" width="200px" src="gitassets/sc2.png" style="padding-right:10px;" />]
+[<img align="bottom" alt="Visual Studio Code" width="200px" src="gitassets/sc2.png" style="padding-right:10px;" />]
 
 ##Notifications Screen
 On this screen you have an overview of your upcoming homeworks. You will also receive notifications the day before due date to alert you of your unfinished homework.
 
-[<img align="left" alt="Visual Studio Code" width="200px" src="gitassets/sc3.png" style="padding-right:10px;" />]
+[<img align="bottom" alt="Visual Studio Code" width="200px" src="gitassets/sc3.png" style="padding-right:10px;" />]
 
 ##Localization
 I also added 7 different languages you can choose and it changes in real time you don't have to restart the app to apply changes.
 
-[<img align="left" alt="Visual Studio Code" width="200px" src="gitassets/sc4.png" style="padding-right:10px;" />]
+[<img align="bottom" alt="Visual Studio Code" width="200px" src="gitassets/sc4.png" style="padding-right:10px;" />]
