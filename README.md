@@ -19,8 +19,8 @@ option to add multiple weeks, so if you have schedule that changes every other w
 [<img align="left" alt="Visual Studio Code" width="300px" src="gitassets/sc1.png" style="padding-right:10px;" />]
 
 
-#Dark Mode
-[<img align="left" alt="Visual Studio Code" width="300px" src="gitassets/sc2.png" style="padding-right:10px;" />]
+##Dark Mode
+[<img align="bottom" alt="Visual Studio Code" width="300px" src="gitassets/sc2.png" style="padding-right:10px;" />]
 
 ##Notifications Screen
 
