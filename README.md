@@ -1,4 +1,4 @@
-##Class Schedule App
+###Class Schedule App
 
 This is an mobile app to help students organize their classes and homework's in school/university. For now it is only available on Android
 but i hope that in the near future i will release it on IOS too.
@@ -15,16 +15,18 @@ official IAP package for implementing in app purchases and for notifications i u
 On the main screen you can switch between days of the week and it will show you classes you have for that day. You also have the
 option to add multiple weeks, so if you have schedule that changes every other week you can set that up too.
 
-[<img align="left" alt="Visual Studio Code" width="26px" src="gitassets/sc1.png" style="padding-right:10px;" />]
+[<img align="left" alt="Visual Studio Code" width="200px" src="gitassets/sc1.png" style="padding-right:10px;" />]
+
+
 #Dark Mode
-[<img align="left" alt="Visual Studio Code" width="26px" src="gitassets/sc2.png" style="padding-right:10px;" />]
+[<img align="left" alt="Visual Studio Code" width="200px" src="gitassets/sc2.png" style="padding-right:10px;" />]
 
 ##Notifications Screen
 On this screen you have an overview of your upcoming homeworks. You will also receive notifications the day before due date to alert you of your unfinished homework.
 
-[<img align="left" alt="Visual Studio Code" width="26px" src="gitassets/sc3.png" style="padding-right:10px;" />]
+[<img align="left" alt="Visual Studio Code" width="200px" src="gitassets/sc3.png" style="padding-right:10px;" />]
 
 ##Localization
 I also added 7 different languages you can choose and it changes in real time you don't have to restart the app to apply changes.
 
-[<img align="left" alt="Visual Studio Code" width="26px" src="gitassets/sc4.png" style="padding-right:10px;" />]
+[<img align="left" alt="Visual Studio Code" width="200px" src="gitassets/sc4.png" style="padding-right:10px;" />]
